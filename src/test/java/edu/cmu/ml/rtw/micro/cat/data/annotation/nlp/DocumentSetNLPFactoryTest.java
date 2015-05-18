@@ -12,10 +12,12 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 public class DocumentSetNLPFactoryTest {
 	@Test
 	public void testDocumentSetNLP() {
+		System.out.println("Loading documents");
 		CatDataTools dataTools = new CatDataTools(new OutputWriter(), new CatProperties());
 		DocumentSetNLP<DocumentNLP> documents = DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1,
 											 dataTools.getProperties(),
 											 dataTools);
+		System.out.println("Loaded " + documents.size());
 		for (String documentName : documents.getDocumentNames()) {
 			DocumentNLP document = documents.getDocumentByName(documentName);
 			Assert.assertNotEquals(null, document);
