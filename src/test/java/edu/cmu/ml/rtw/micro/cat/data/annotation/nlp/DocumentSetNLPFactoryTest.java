@@ -16,7 +16,7 @@ public class DocumentSetNLPFactoryTest {
 											 dataTools.getProperties(),
 											 dataTools);
 		for (String documentName : documents.getDocumentNames()) {
-			System.out.println(documentName);
+			System.out.println(documentName + documents.getDocumentByName(documentName).toJSON().toString());
 		}									 
 	}
 }
