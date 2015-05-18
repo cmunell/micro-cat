@@ -19,6 +19,7 @@ public class DocumentSetNLPFactoryTest {
 											 dataTools);
 		System.out.println("Loaded " + documents.size());
 		for (String documentName : documents.getDocumentNames()) {
+			System.out.println("Document: " + documentName);
 			DocumentNLP document = documents.getDocumentByName(documentName);
 			Assert.assertNotEquals(null, document);
 			System.out.println(documentName + documents.getDocumentByName(documentName).toJSON().toString());
