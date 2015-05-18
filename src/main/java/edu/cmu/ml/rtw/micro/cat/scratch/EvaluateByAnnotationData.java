@@ -18,12 +18,14 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLDataSetFactory;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
-import edu.cmu.ml.rtw.micro.cat.util.CatProperties;*/
+import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
+import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;*/
 
 public class EvaluateByAnnotationData {
 /*	public static void main(String[] args) {
@@ -155,7 +157,7 @@ public class EvaluateByAnnotationData {
 	
 	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> nellLabelData(final DataSet<TokenSpansDatum<CategoryList>, CategoryList> data, int maxThreads, final double nellConfidenceThreshold) {
 		final DataSet<TokenSpansDatum<CategoryList>, CategoryList> labeledData = new DataSet<TokenSpansDatum<CategoryList>, CategoryList>(data.getDatumTools(), null);
-		final NELL nell = new NELL((PolyDataTools)data.getDatumTools().getDataTools());
+		final NELLUtil nell = new NELLUtil((CatDataTools)data.getDatumTools().getDataTools());
 		
 		labeledData.addAll(data.map(new Fn<TokenSpansDatum<CategoryList>, TokenSpansDatum<CategoryList>>(){
 
