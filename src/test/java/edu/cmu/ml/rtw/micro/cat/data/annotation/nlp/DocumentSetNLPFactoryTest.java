@@ -1,27 +1,9 @@
 package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 
-import org.junit.Assert;
+import org.junit.Test;
+import org.platanios.learn.classification.LogisticRegressionAdaGrad;
 
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
-import edu.cmu.ml.rtw.generic.util.OutputWriter;
-import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
-import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
 public class DocumentSetNLPFactoryTest {
-	// FIXME @Test
-	public void testDocumentSetNLP() {
-		System.out.println("Loading documents");
-		CatDataTools dataTools = new CatDataTools(new OutputWriter(), new CatProperties());
-		DocumentSetNLP<DocumentNLP> documents = DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1,
-											 dataTools.getProperties(),
-											 dataTools);
-		System.out.println("Loaded " + documents.size());
-		for (String documentName : documents.getDocumentNames()) {
-			System.out.println("Document: " + documentName);
-			DocumentNLP document = documents.getDocumentByName(documentName);
-			Assert.assertNotEquals(null, document);
-			System.out.println(documentName + documents.getDocumentByName(documentName).toJSON().toString());
-		}									 
-	}
+	
 }
