@@ -1,5 +1,6 @@
 package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
@@ -16,6 +17,8 @@ public class DocumentSetNLPFactoryTest {
 											 dataTools.getProperties(),
 											 dataTools);
 		for (String documentName : documents.getDocumentNames()) {
+			DocumentNLP document = documents.getDocumentByName(documentName);
+			Assert.assertNotEquals(null, document);
 			System.out.println(documentName + documents.getDocumentByName(documentName).toJSON().toString());
 		}									 
 	}
