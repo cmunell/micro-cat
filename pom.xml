@@ -9,9 +9,9 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <source/>
-          <target/>
-        </configuration>
+          <source>1.8</source>
+          <target>1.8</target>  
+		</configuration>
       </plugin>
     </plugins>
   </build>
@@ -25,7 +25,12 @@
  		<groupId>edu.cmu.ml.rtw</groupId>
  		<artifactId>micro-util</artifactId>
  		<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
+    </dependency>
+    <dependency>
+		<groupId>org.apache.hadoop</groupId>
+		<artifactId>hadoop-mapreduce-client-core</artifactId>
+		<version>2.2.0</version>
+    </dependency>
   </dependencies>
   <repositories>      
   	<repository>
