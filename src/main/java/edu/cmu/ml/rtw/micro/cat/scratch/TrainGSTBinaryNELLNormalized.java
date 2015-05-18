@@ -36,7 +36,7 @@ public class TrainGSTBinaryNELLNormalized {
 			return;
 		
 		CatProperties properties = new CatProperties();
-		String experimentInputPath = new File(properties.getContextInputDirPath(), experimentName + ".ctx").getAbsolutePath();
+		String experimentInputPath = new File(properties.getContextInputDirPath(), "/GSTBinaryNELLNormalized/" + experimentName + ".ctx").getAbsolutePath();
 		
 		CatDataTools dataTools = new CatDataTools(new OutputWriter(), properties);
 		dataTools.setRandomSeed(randomSeed);
@@ -61,7 +61,7 @@ public class TrainGSTBinaryNELLNormalized {
 																nonPolysemousDataSetName, 
 																nonPolysemousExamplesPerLabel);
 		
-		String experimentOutputPath = new File(properties.getExperimentOutputDirPath(), documentSetName.toString() + "_" + nonPolysemousDataSetName + "/" + experimentName).getAbsolutePath(); 
+		String experimentOutputPath = new File(properties.getExperimentOutputDirPath(), documentSetName.toString() + "_" + nonPolysemousDataSetName + "/GSTBinaryNELLNormalized/" + experimentName).getAbsolutePath(); 
 		
 		dataTools.getOutputWriter().setDebugFile(new File(experimentOutputPath + ".debug.out"), false);
 		dataTools.getOutputWriter().setDataFile(new File(experimentOutputPath + ".data.out"), false);
@@ -149,7 +149,7 @@ public class TrainGSTBinaryNELLNormalized {
 			return false;
 		}
 		
-		experimentName = "GSTNELLNormalized/" + options.valueOf("experimentName").toString();
+		experimentName = options.valueOf("experimentName").toString();
 		randomSeed = (int)options.valueOf("randomSeed");
 		nellConfidenceThreshold = (double)options.valueOf("nellConfidenceThreshold");
 		nonPolysemousExamplesPerLabel = (int)options.valueOf("nonPolysemousExamplesPerLabel");
