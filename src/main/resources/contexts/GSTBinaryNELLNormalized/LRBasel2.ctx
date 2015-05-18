@@ -1,0 +1,138 @@
+value randomSeed="1";
+value maxThreads="33";
+value trainOnDev="false";
+value errorExampleExtractor="FirstTokenSpan";
+array validLabels=("year", "abstractthing", "vertebrate", "county", "building", "cheese", 
+"bank", "mountain", "protein", "farm", "researchproject", 
+"visualizablething", "bakedgood", "vein", "crustacean", 
+"landscapefeatures", "politicianus", "hallwayitem", "skyscraper", "artery", "airport", 
+"journalist", "chemical", "musicfestival", "awardtrophytournament", "plant", "animal", 
+"physiologicalcondition", "bridge", "officeitem", "male", "wine", "mollusk", "hobby", 
+"newspaper", "continent", "personafrica", "conference", "officebuildingroom", "nongovorganization", 
+"ceo", "beverage", "hotel", "currency", "kitchenitem", "agriculturalproduct", "musician", 
+"householditem", "tableitem", "website", "creditunion", "geolocatablething", "food", "religion", 
+"transportation", "actor", "recordlabel", "fish", "medicalprocedure", "river", "mlalgorithm", 
+"personalcareitem", "stateorprovince", "mlsoftware", "celebrity", "country", "mediacompany", 
+"agent", "cardgame", "language", "wallitem", "sociopolitical", "crimeorcharge", "trail", "furniture", 
+"school", "bird", "female", "highway", "placeofworship", "athlete", "planet", "jobposition", 
+"personsouthamerica", "meetingeventtitle", "visualizablescene", "mlarea", "month", "museum", 
+"port", "clothing", "professionalorganization", "mediatype", "celltype", "biotechcompany", 
+"personeurope", "color", "sportsleague", "scientist", "politicsgroup", "book", "sportsteam", 
+"radiostation", "monument", "vegetable", "monarch", "weapon", "meetingeventtype", "poem", "retailstore", 
+"mammal", "consumerelectronicitem", "militaryconflict", "street", "politicaloffice", "personus", 
+"company", "lyrics", "geopoliticallocation", "convention", "buildingfeature", "physicalaction", 
+"automobilemodel", "disease", "election", "race", "skiarea", "politician", "flooritem", 
+"sportsteamposition", "charactertrait", "bone", "musicinstrument", "filmfestival", 
+"aquarium", "room", "musicalbum", "personmexico", "terroristorganization", "visualizableobject", 
+"beach", "location", "magazine", "mountainrange", "movie", "software", "visualartmovement", "amphibian", 
+"personcanada", "astronaut", "bathroomitem", "tradeunion", "perceptionaction", "bedroomitem", "lymphnode",
+"model", "judge", "winery", "bodypart", "profession", "item", "visualizableattribute", "geopoliticalentity", 
+"director", "governmentorganization", "olympics", "politicsbill", "personbylocation", "arachnid", 
+"braintissue", "coach", "city", "architect", "economicsector", "creativework", "nonneginteger", 
+"vehicle", "politicsblog", "event", "stadiumoreventvenue", "sportsevent", "gamescore", "ethnicgroup", 
+"weatherphenomenon", "product", "restaurant", "url", "emotion", "species", "organization", "shoppingmall", 
+"geometricshape", "physicsterm", "highschool", "sportsgame", "date", "traditionalgame", 
+"nondiseasecondition", "televisionshow", "bacteria", "mlconference", "perceptionevent", "automobilemaker", 
+"videogamesystem", "reptile", "blog", "nut", "humanagent", "politicsissue", "programminglanguage", 
+"eventoutcome", "drug", "musicgenre", "boardgame", "videogame", "publication", "insect", "criminal",
+"grain", "buildingmaterial", "dateliteral", "cave", "sportsequipment", "island", "tool", "llcoordinate", 
+"zipcode", "professor", "visualartform", "person", "cognitiveactions", "nerve", "parlourgame", 
+"musicartist", "personnorthamerica", "militaryeventtype", "lake", "game", "condiment", "mlauthor", 
+"trainstation", "candy", "university", "fruit", "mlmetric", "recipe", "geopoliticalorganization", 
+"grandprix", "personantarctica", "personaustralia", "archaea", "comedian", "automobileengine", "fungus", 
+"muscle", "arthropod", "invertebrate", "zoo", "hospital", "televisionnetwork", "mldataset", "park", 
+"nonprofitorganization", "personasia", "chef", "physicalcharacteristic", "politicalparty", "visualartist", 
+"televisionstation", "academicfield", "attraction", "legume", "musicsong", "scientificterm", "meat", 
+"dayofweek", "writer", "sport");
+
+evaluation accuracy=Accuracy();
+evaluation accuracyBase=Accuracy(computeBaseline="true");
+evaluation f.5=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="0.5");
+evaluation f1=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="1");
+evaluation prec=Precision(weighted="false", filterLabel="true");
+evaluation recall=Recall(weighted="false", filterLabel="true");
+
+(composite) evaluation fbPrec=LabelsListFreebase(evaluationType="Precision");
+(composite) evaluation fbPrecBase.5=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.5", evaluationType="Precision");
+(composite) evaluation fbPrecBase.75=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.75", evaluationType="Precision");
+(composite) evaluation fbPrecBase.9=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.9", evaluationType="Precision");
+(composite) evaluation fbRecall=LabelsListFreebase(evaluationType="Recall");
+(composite) evaluation fbRecallBase.5=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.5", evaluationType="Recall");
+(composite) evaluation fbRecallBase.75=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.75", evaluationType="Recall");
+(composite) evaluation fbRecallBase.9=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.9", evaluationType="Recall");
+(composite) evaluation fbF1=LabelsListFreebase(evaluationType="F1");
+(composite) evaluation fbF1Base.5=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.5", evaluationType="F1");
+(composite) evaluation fbF1Base.75=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.75", evaluationType="F1");
+(composite) evaluation fbF1Base.9=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.9", evaluationType="F1");
+(composite) evaluation fbAccuracy=LabelsListFreebase(evaluationType="Accuracy");
+(composite) evaluation fbAccuracyBase.5=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.5", evaluationType="Accuracy");
+(composite) evaluation fbAccuracyBase.75=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.75", evaluationType="Accuracy");
+(composite) evaluation fbAccuracyBase.9=LabelsListFreebase(computeNELLBaseline="true", NELLConfidenceThreshold="0.9", evaluationType="Accuracy");
+
+feature fcpna1=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((((<p:RB,VB>)*<p:VB>)|POS)(DT)?(<p:JJ,NN>)*<p:NN>).*");
+feature fcpna2=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((((<p:RB,VB>)*<p:VB>)|POS){~'that'}{~'because'}(IN)+).*");
+feature fcpnb1=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NNP,NN,JJ,PRP>)+(SYM)?(<p:VB,RB>)*<p:VB>(<p:VB,RB>)*{~'that'}{~'because'}(IN|TO|JJ)*");
+feature fcpnb2=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN,JJ,PRP> ((<p:NNP,NN,JJ,PRP>)+(SYM)?(<p:VB,RB>)*<p:VB>(<p:VB,RB>)*{~'that'}{~'because'}(IN|TO|JJ)*)");
+feature fcpnb3=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*");
+feature fcpnb4=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN> ((<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*)");
+feature fcpnb5=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NN,JJ,NNP>)+(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*");
+feature fcpnb6=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN,JJ> ((<p:NN,JJ,NNP>)+(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*)");
+feature fcpb1=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".* (IN|TO|JJ)");
+feature fcpa1=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((<p:RB,VB>)*<p:VB>).*");
+
+feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="PolyStemCleanFn", tokenExtractor="AllTokenSpans");
+feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
+feature ftcnt=TokenCount(maxCount="5", tokenExtractor="AllTokenSpans");
+feature fform=StringForm(stringExtractor="FirstTokenSpan", minFeatureOccurrence="2");
+
+feature fgnp=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="FirstTokenSpan", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnps=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="SentenceNELLNounPhrases", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd1=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentUnigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd2=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentBigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentTrigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+
+ts_fn head=Head();
+ts_fn ins1=NGramInside(n="1", noHead="true");
+ts_fn ins2=NGramInside(n="2", noHead="true");
+ts_fn ins3=NGramInside(n="3", noHead="true");
+ts_fn ctxb1=NGramContext(n="1", type="BEFORE");
+ts_fn ctxa1=NGramContext(n="1", type="AFTER");
+ts_fn sent1=NGramSentence(n="1", noSpan="true");
+ts_str_fn pos=PoS();
+ts_str_fn strDef=String(cleanFn="PolyDefaultCleanFn");
+ts_str_fn strStem=String(cleanFn="PolyStemCleanFn");
+ts_str_fn strBoW=String(cleanFn="PolyBagOfWordsFeatureCleanFn");
+str_fn pre=Affix(nMin="3", nMax="3", type="PREFIX"); 
+str_fn suf=Affix(nMin="3", nMax="3", type="SUFFIX"); 
+str_fn filter=Filter(type="SUBSTRING");
+str_fn filter_s=Filter(type="SUFFIX");
+str_fn filter_p=Filter(type="PREFIX");
+
+feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
+feature fphrh1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
+feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
+feature fphr2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins2}));
+feature fphr3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins3}));
+
+feature fposb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${pos} o ${ctxb1}));
+feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pos} o ${ctxa1}));
+feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${strStem} o ${ctxb1}));
+feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${strStem} o ${ctxa1}));
+feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${head}));
+feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${head}));
+feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${ins1}));
+feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
+feature fsent1=TokenSpanFnDataVocab(scale="NORMALIZED_TFIDF", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
+
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+{
+	array validLabels=${validLabels};
+};
+
+gs g=GridSearch() {
+	dimension l2=Dimension(name="l2", values=(.000001,.00001,.0001), trainingDimension="true");
+	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
+	
+	model model=${lr};
+	evaluation evaluation=${accuracy};
+};
