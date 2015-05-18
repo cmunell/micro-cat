@@ -78,6 +78,9 @@ public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedMod
 			TokenSpan[] datumTokenSpans = entry.getKey().getTokenSpans();
 			for (int i = 0; i < datumTokenSpans.length; i++) {
 				FACC1DocumentNLPInMemory document = (FACC1DocumentNLPInMemory)datumTokenSpans[i].getDocument();
+				if (!document.hasAnnotationType(AnnotationTypeNLPCat.FACC1))
+					continue;
+				
 				List<Pair<TokenSpan, FACC1Annotation>> facc1Annotations = document.getTokenSpanAnnotations(AnnotationTypeNLPCat.FACC1);
 				for (Pair<TokenSpan, FACC1Annotation> facc1Annotation : facc1Annotations) {
 					if (facc1Annotation.getFirst().equals(datumTokenSpans[i])) {
