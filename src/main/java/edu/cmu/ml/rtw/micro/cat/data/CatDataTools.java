@@ -54,7 +54,7 @@ public class CatDataTools extends DataTools {
 			private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<String, String>();
 			
 			public String toString() {
-				return "PolyDefaultCleanFn";
+				return "CatDefaultCleanFn";
 			}
 			
 			@Override
@@ -73,7 +73,7 @@ public class CatDataTools extends DataTools {
 			private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<String, String>();
 			
 			public String toString() {
-				return "PolyStemCleanFn";
+				return "CatStemCleanFn";
 			}
 			
 			@Override
@@ -90,7 +90,7 @@ public class CatDataTools extends DataTools {
 		
 		this.addCleanFn(new DataTools.StringTransform() {
 			public String toString() {
-				return "PolyBagOfWordsFeatureCleanFn";
+				return "CatBagOfWordsFeatureCleanFn";
 			}
 			
 			@Override
@@ -122,7 +122,7 @@ public class CatDataTools extends DataTools {
 			}
 		});
 		
-		this.addStringClusterer(new ClustererStringAffix("AffixMaxLength5", 5, this.getCleanFn("PolyDefaultCleanFn")));
+		this.addStringClusterer(new ClustererStringAffix("AffixMaxLength5", 5, this.getCleanFn("CatDefaultCleanFn")));
 		this.addTokenSpanClusterer(new ClustererTokenSpanString(getStringClusterer("AffixMaxLength5")));
 		
 		this.addAnnotationTypeNLP(AnnotationTypeNLPCat.FACC1);
@@ -177,7 +177,7 @@ public class CatDataTools extends DataTools {
 	 * 
 	 * Paths starting with 'CregModel' refer to serialized creg models
 	 * stored in the directory specified by 'cregDataDirPath' in
-	 * poly.properties.
+	 * cat.properties.
 	 */
 	public synchronized Path getPath(String name) {
 		if (name == null)
