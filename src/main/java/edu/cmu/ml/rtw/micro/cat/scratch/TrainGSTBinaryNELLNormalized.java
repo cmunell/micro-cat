@@ -107,7 +107,7 @@ public class TrainGSTBinaryNELLNormalized {
 			.ofType(Double.class)
 			.defaultsTo(0.9);
 		
-		parser.accepts("nonPolysemousExamplesForLabel").withRequiredArg()
+		parser.accepts("nonPolysemousExamplesPerLabel").withRequiredArg()
 			.describedAs("Number of non-polysemous examples per category label")
 			.ofType(Integer.class)
 			.defaultsTo(2000);
