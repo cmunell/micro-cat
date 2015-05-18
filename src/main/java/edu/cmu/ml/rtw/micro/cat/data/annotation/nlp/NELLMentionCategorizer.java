@@ -50,8 +50,8 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 	public static final CategoryList.Type DEFAULT_VALID_CATEGORIES = CategoryList.Type.ALL_NELL_CATEGORIES;
 	public static final double DEFAULT_MENTION_MODEL_THRESHOLD =  Double.MAX_VALUE;
 	public static final LabelType DEFAULT_LABEL_TYPE= LabelType.WEIGHTED_CONSTRAINED;
-	public static final File DEFAULT_FEATURES_FILE = new File("src/main/resources/models/GSTBinaryNELLNormalized/AllNELL_c90_e100/AregBasel2.model.out");
-	public static final String DEFAULT_MODEL_FILE_PATH_PREFIX = "src/main/resources/models/AllNELL_c90_e100/AregBasel2.model.out.";
+	public static final File DEFAULT_FEATURES_FILE = new File("src/main/resources/models/GSTBinaryNELLNormalized/HazyFacc1_AllNELL_c90_e100/LRBasel2.model.out");
+	public static final String DEFAULT_MODEL_FILE_PATH_PREFIX = "src/main/resources/models/GSTBinaryNELLNormalized/HazyFacc1_AllNELL_c90_e100/LRBasel2.model.out.";
 	
 	private int datumId;
 	private Context<TokenSpansDatum<CategoryList>, CategoryList> context;
