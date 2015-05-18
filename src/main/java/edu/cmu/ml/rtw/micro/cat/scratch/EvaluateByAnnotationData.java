@@ -1,7 +1,8 @@
 package edu.cmu.ml.rtw.micro.cat.scratch;
-/*
+
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -11,9 +12,14 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -21,19 +27,22 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper.Fn;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
-import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLDataSetFactory;
+import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.DocumentSetNLPFactory;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
-import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;*/
+import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
 public class EvaluateByAnnotationData {
-/*	public static void main(String[] args) {
-		double nellConfidenceThreshold = Double.valueOf(args[0]);
-		int maxThreads = Integer.valueOf(args[1]);
-		File featuresFile = new File(args[2]);
-		String modelFilePathPrefix = args[3];
-		File inputFileDir= new File(args[4]);
+	private static double nellConfidenceThreshold;
+	private static int maxThreads;
+	private static File featuresFile;;
+	private static String modelFilePathPrefix;
+	private static File inputFileDir;
+	
+	public static void main(String[] args) {
+		if (!parseArgs(args))
+			return;
 		
 		final CatProperties properties = new CatProperties();
 		OutputWriter output = new OutputWriter();
@@ -42,15 +51,15 @@ public class EvaluateByAnnotationData {
 		
 		TokenSpansDatum.Tools<CategoryList> datumTools = TokenSpansDatum.getCategoryListTools(dataTools);
 		TokenSpansDatum.Tools<Boolean> binaryTools = TokenSpansDatum.getBooleanTools(dataTools);
-		NELLDataSetFactory dataFactory = new NELLDataSetFactory(dataTools, properties.getHazyFacc1DataDirPath(), 1000000);
-
-		NELLMentionCategorizer categorizer = new NELLMentionCategorizer(datumTools, "ALL_NELL_CATEGORIES", Double.MAX_VALUE, NELLMentionCategorizer.LabelType.WEIGHTED_CONSTRAINED, featuresFile, modelFilePathPrefix, dataFactory);
+		//NELLDataSetFactory dataFactory = new NELLDataSetFactory(dataTools, properties.getHazyFacc1DataDirPath(), 1000000);
+	
+		NELLMentionCategorizer categorizer = new NELLMentionCategorizer(datumTools, CategoryList.Type.ALL_NELL_CATEGORIES, Double.MAX_VALUE, NELLMentionCategorizer.LabelType.WEIGHTED_CONSTRAINED, featuresFile, modelFilePathPrefix, maxThreads);
 		
 		File[] inputFiles = inputFileDir.listFiles();
 		Map<String, Map<String, Pair<Evaluation, Evaluation>>> categoryToNameToPerformance = new TreeMap<String, Map<String, Pair<Evaluation, Evaluation>>>();
 		Set<String> names = new TreeSet<String>();
 		for (File inputFile : inputFiles) {
-			Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> annotatedData = loadAnnotatedData(inputFile, binaryTools, dataTools.getDocumentCache());		
+			Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> annotatedData = loadAnnotatedData(inputFile, binaryTools, DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1, properties, dataTools));		
 			System.out.println("Evaluating " + annotatedData.getFirst() + "...");
 			String[] nameAndCategory = annotatedData.getFirst().split("\\.");
 			String name = nameAndCategory[0];
@@ -87,7 +96,7 @@ public class EvaluateByAnnotationData {
 		outputEvaluations(names, categoryToNameToPerformance, Evaluation.Measure.Recall);
 	}
 	
-	private static Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> loadAnnotatedData(File file, TokenSpansDatum.Tools<Boolean> tools, DocumentCache documents) {
+	private static Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> loadAnnotatedData(File file, TokenSpansDatum.Tools<Boolean> tools, DocumentSetNLP<DocumentNLP> documents) {
 		DataSet<TokenSpansDatum<Boolean>, Boolean> data = new DataSet<TokenSpansDatum<Boolean>, Boolean>(tools, null);
 		String fileName = file.getName();
 		String nameAndCategory = fileName.substring(fileName.lastIndexOf('.', fileName.lastIndexOf('.') - 1) + 1);
@@ -112,7 +121,7 @@ public class EvaluateByAnnotationData {
 	
 	private static Pair<Evaluation, Evaluation> evaluateByAnnotatedData(int maxThreads, NELLMentionCategorizer categorizer, double nellConfidenceThreshold, DataSet<TokenSpansDatum<Boolean>, Boolean> data, String label) {
 		DataSet<TokenSpansDatum<CategoryList>, CategoryList> unlabeledData = makeUnlabeledData(data);
-		DataSet<TokenSpansDatum<CategoryList>, CategoryList> mentionLabeledData = categorizer.categorizeNounPhraseMentions(unlabeledData, maxThreads, true);
+		DataSet<TokenSpansDatum<CategoryList>, CategoryList> mentionLabeledData = categorizer.categorizeNounPhraseMentions(unlabeledData, true);
 		DataSet<TokenSpansDatum<CategoryList>, CategoryList> nellLabeledData = nellLabelData(unlabeledData, maxThreads, nellConfidenceThreshold);
 		
 		Evaluation mentionEvaluation = new Evaluation();
@@ -309,5 +318,51 @@ public class EvaluateByAnnotationData {
 			
 			return this.tp/(this.tp + this.fn);
 		}
-	}*/
+	}
+	
+	private static boolean parseArgs(String[] args) {
+		OptionParser parser = new OptionParser();
+		
+		parser.accepts("maxThreads").withRequiredArg()
+			.describedAs("Maximum number of threads")
+			.ofType(Integer.class)
+			.defaultsTo(33);
+		
+		parser.accepts("nellConfidenceThreshold").withRequiredArg()
+			.describedAs("Confidence threshold above which NELL's beliefs are used to categorize noun-phrases")
+			.ofType(Double.class)
+			.defaultsTo(0.9);		
+		
+		parser.accepts("featuresFile").withRequiredArg()
+			.describedAs("Path to file containing initialized model features")
+			.ofType(File.class);
+		
+		parser.accepts("modelFilePathPrefix").withRequiredArg()
+			.describedAs("Prefix of serialized model file paths");
+		
+		parser.accepts("inputFileDir").withRequiredArg()
+			.describedAs("Input file directory")
+			.ofType(File.class);
+		
+		parser.accepts("help").forHelp();
+		
+		OptionSet options = parser.parse(args);
+		
+		if (options.has("help")) {
+			try {
+				parser.printHelpOn(System.out);
+			} catch (IOException e) {
+				return false;
+			}
+			return false;
+		}
+		
+		maxThreads = (int)options.valueOf("maxThreads");
+		nellConfidenceThreshold = (double)options.valueOf("nellConfidenceThreshold");
+		featuresFile = (File)options.valueOf("featuresFile");
+		modelFilePathPrefix = options.valueOf("modelFilePathPrefix").toString();
+		inputFileDir = (File)options.valueOf("inputFileDir");
+		
+		return true;
+	}
 }
