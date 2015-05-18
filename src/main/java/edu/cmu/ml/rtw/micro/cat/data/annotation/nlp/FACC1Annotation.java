@@ -88,19 +88,18 @@ public class FACC1Annotation implements JSONSerializable {
 	
 	@Override
 	public boolean fromJSON(JSONObject json) {
-		FACC1Annotation facc1 = new FACC1Annotation();
 		try {
-			facc1.phrase = json.getString("phrase");
-			facc1.startByte = json.getInt("startByte");
-			facc1.endByte = json.getInt("endByte");
-			facc1.mcp = json.getDouble("mcp");
-			facc1.cp = json.getDouble("cp");
-			facc1.freebaseTopic = json.getString("freebaseTopic");
+			this.phrase = json.getString("phrase");
+			this.startByte = json.getInt("startByte");
+			this.endByte = json.getInt("endByte");
+			this.mcp = json.getDouble("mcp");
+			this.cp = json.getDouble("cp");
+			this.freebaseTopic = json.getString("freebaseTopic");
 			
 			JSONArray freebaseTypes = json.getJSONArray("freebaseTypes");
-			facc1.freebaseTypes = new String[freebaseTypes.length()];
-			for (int i = 0; i < facc1.freebaseTypes.length; i++)
-				facc1.freebaseTypes[i] = freebaseTypes.getString(i);
+			this.freebaseTypes = new String[freebaseTypes.length()];
+			for (int i = 0; i < this.freebaseTypes.length; i++)
+				this.freebaseTypes[i] = freebaseTypes.getString(i);
 		} catch (JSONException e) { 
 			return false;
 		}
