@@ -28,7 +28,6 @@ public class NELLMentionCategorizerTest {
 
 		List<Annotation> annotations = document.toMicroAnnotation().getAllAnnotations();
 		for (Annotation annotation : annotations)
-		System.out.println(annotation.toJsonString());
-		
+			System.out.println(annotation.toJsonString());
 	}
 }
