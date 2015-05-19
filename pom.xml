@@ -25,6 +25,13 @@
          <version>1.0-beta-6</version>
       </extension>
     </extensions> -->
+      <extensions>
+            <extension>
+                <groupId>org.apache.maven.wagon</groupId>
+                <artifactId>wagon-webdav</artifactId>
+                <version>1.0-beta-2</version>
+            </extension>
+        </extensions>
   </build>
   <dependencies>
     <dependency>
@@ -82,7 +89,7 @@
       <id>rtw-libs-snapshot</id>
       <name>rtw-libs-snapshot</name>
       <!-- <url>scpexe://rtw.ml.cmu.edu/artifactory/libs-snapshot-local</url> -->
-      <url>http://rtw.ml.cmu.edu:8081/artifactory/libs-snapshot-local</url>
+      <url>dav:http://rtw.ml.cmu.edu:8081/artifactory/libs-snapshot-local</url>
     </repository>
   </distributionManagement>
 </project>
