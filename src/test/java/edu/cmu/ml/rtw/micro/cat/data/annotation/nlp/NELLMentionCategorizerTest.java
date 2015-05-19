@@ -25,7 +25,8 @@ public class NELLMentionCategorizerTest {
 		
 		DocumentNLP document = new DocumentNLPInMemory(new CatDataTools(), 
 				   "Test document", 
-				   "I baked a cake in the oven.  President Barack Obama helped.  We live in the United States.",
+				   "I baked a cake in the oven.  Barack Obama helped because I was " +
+				   "the deciding vote in the next presidential election in the United States.",
 				   Language.English, pipeline);
 
 		List<Annotation> annotations = document.toMicroAnnotation().getAllAnnotations();
