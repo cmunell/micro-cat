@@ -162,6 +162,7 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 				if (FileUtil.fileExists(modelFile.getPath())) {
 					dataTools.getOutputWriter().debugWriteln("Deserializing " + category + " model at " + modelFile.getPath());
 					BufferedReader modelReader = FileUtil.getFileReader(modelFile.getPath());
+					
 					Context<TokenSpansDatum<Boolean>, Boolean> modelContext = Context.deserialize(binaryContext.getDatumTools(), modelReader);
 					modelReader.close();
 					
