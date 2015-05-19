@@ -48,8 +48,9 @@ public class NELLCategorizeNPMentions {
 		TSV
 	}
 	
-	public static final int DEFAULT_MIN_ANNOTATION_SENTENCE_LENGTH = 3;
+	/* FIXME Add back at some point public static final int DEFAULT_MIN_ANNOTATION_SENTENCE_LENGTH = 3;
 	public static final int DEFAULT_MAX_ANNOTATION_SENTENCE_LENGTH = 30;
+	*/
 	
 	private static CatDataTools dataTools; 
 	private static Datum.Tools<TokenSpansDatum<CategoryList>, CategoryList> datumTools;
@@ -384,14 +385,16 @@ public class NELLCategorizeNPMentions {
 		parser.accepts("outputDocumentDir").withRequiredArg()
 			.describedAs("Optional path to NLP document annotation output directory")
 			.ofType(File.class);
-		parser.accepts("minAnnotationSentenceLength").withRequiredArg()
+		/* FIXME Add these back at some point
+		 	parser.accepts("minAnnotationSentenceLength").withRequiredArg()
+		 
 			.describedAs("Minimum length of sentences that are considered when parsing the document")
 			.ofType(Integer.class)
 			.defaultsTo(DEFAULT_MIN_ANNOTATION_SENTENCE_LENGTH);
 		parser.accepts("maxAnnotationSentenceLength").withRequiredArg()
 			.describedAs("Maximum length of sentences that are considered when parsing the document")
 			.ofType(Integer.class)
-			.defaultsTo(DEFAULT_MAX_ANNOTATION_SENTENCE_LENGTH);
+			.defaultsTo(DEFAULT_MAX_ANNOTATION_SENTENCE_LENGTH);*/
 		parser.accepts("outputDebugFile").withRequiredArg()
 			.describedAs("Optional path to debug output file")
 			.ofType(File.class);
@@ -456,7 +459,7 @@ public class NELLCategorizeNPMentions {
 			outputDocumentDir = (File)options.valueOf("outputDocumentDir");
 		}
 		
-		nlpAnnotator = new PipelineNLPStanford((Integer)options.valueOf("minAnnotationSentenceLength"), (Integer)options.valueOf("maxAnnotationSentenceLength"));
+		nlpAnnotator = new PipelineNLPStanford();//new PipelineNLPStanford((Integer)options.valueOf("minAnnotationSentenceLength"), (Integer)options.valueOf("maxAnnotationSentenceLength"));
 		
 		if (options.has("outputDebugFile")) {
 			dataTools.getOutputWriter().setDebugFile((File)options.valueOf("outputDebugFile"), appendOutput);
