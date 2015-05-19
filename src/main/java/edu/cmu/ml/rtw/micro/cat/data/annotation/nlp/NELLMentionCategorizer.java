@@ -354,7 +354,8 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			}
 		}
 		
-		System.out.println("Categorized " + categorized.size());
+		for (Triple<TokenSpan, String, Double> category : categorized)
+			System.out.println(category.getSecond() + " " + category.getThird());
 		
 		return categorized;
 	}
