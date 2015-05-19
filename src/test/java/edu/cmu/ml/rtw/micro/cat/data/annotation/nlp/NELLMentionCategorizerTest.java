@@ -3,7 +3,7 @@ package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 import java.io.StringReader;
 import java.util.List;
 
-//import org.junit.Test;
+import org.junit.Test;
 
 import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
@@ -16,7 +16,7 @@ import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 
 public class NELLMentionCategorizerTest {
-	// FIXME @Test
+	@Test
 	public void testNELLMentionCategorizer() {
 		PipelineNLPStanford pipelineStanford = new PipelineNLPStanford();
 		PipelineNLPExtendable pipelineExtendable = new PipelineNLPExtendable();

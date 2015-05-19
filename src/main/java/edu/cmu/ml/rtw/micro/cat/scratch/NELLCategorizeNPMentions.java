@@ -11,13 +11,18 @@ import java.util.List;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 
+import org.joda.time.DateTime;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.Annotation;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -25,6 +30,7 @@ import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.Timer;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
+import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
@@ -32,10 +38,12 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 public class NELLCategorizeNPMentions {
 	public enum InputType {
 		PLAIN_TEXT,
-		ANNOTATED
+		JSON,
+		MICRO
 	}
 	
 	public enum OutputType {
+		MICRO,
 		JSON,
 		TSV
 	}
@@ -57,6 +65,7 @@ public class NELLCategorizeNPMentions {
 	private static boolean appendOutput;
 	private static long quittingTime;
 	private static BufferedWriter dataWriter;
+	private static DateTime annotationTime = DateTime.now();
 	
 	public static void main(String[] args) {
 		Timer timer = new Timer();
@@ -100,9 +109,9 @@ public class NELLCategorizeNPMentions {
 				}
 				
 				dataTools.getOutputWriter().debugWriteln("Processing file " + file.getName() + "...");
-				DocumentNLPInMemory document = null;
+				List<DocumentNLPInMemory> documents = new ArrayList<DocumentNLPInMemory>();
 				if (inputType == InputType.PLAIN_TEXT) {
-					document = constructAnnotatedDocument(file);
+					DocumentNLPInMemory document = constructAnnotatedDocument(file);
 					
 					if (document == null) {
 						dataTools.getOutputWriter().debugWriteln("ERROR: Failed to annotate document " + file.getName() + ". ");
@@ -110,24 +119,55 @@ public class NELLCategorizeNPMentions {
 					}
 					
 					if (outputDocumentDir != null) {
-						if (!document.saveToJSONFile(outputDocumentFile.getAbsolutePath())) {
+						if (outputType == OutputType.MICRO) {
+							document.toMicroAnnotation().writeToFile(outputDocumentFile.getAbsolutePath());
+						} else if (!document.saveToJSONFile(outputDocumentFile.getAbsolutePath())) {
 							dataTools.getOutputWriter().debugWriteln("ERROR: Failed to save annotated " + file.getName() + ". ");
 							return false;
 						}
 					}
+					
+					documents.add(document);
+				} else if (inputType == InputType.MICRO) {
+					List<DocumentAnnotation> annotations = DocumentAnnotation.fromFile(file.getAbsolutePath());
+					for (DocumentAnnotation annotation : annotations) {
+						documents.add(new DocumentNLPInMemory(dataTools, annotation));
+					}
 				} else {
-					document = new DocumentNLPInMemory(dataTools, FileUtil.readJSONFile(file));
+					documents.add(new DocumentNLPInMemory(dataTools, FileUtil.readJSONFile(file)));
 				}
 				
-				DataSet<TokenSpansDatum<CategoryList>, CategoryList> labeledData = categorizer.categorizeNounPhraseMentions(document);
+				DataSet<TokenSpansDatum<CategoryList>, CategoryList> labeledData = categorizer.categorizeNounPhraseMentions(documents.get(0));
+
 				if (labeledData == null) {
 					dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run categorizer on " + file.getName() + ". ");
 					return false;
 				}
-			
+				
+				for (int i = 1; i < documents.size(); i++) {
+					DataSet<TokenSpansDatum<CategoryList>, CategoryList> moreLabeledData = categorizer.categorizeNounPhraseMentions(documents.get(i));
+					
+					if (moreLabeledData == null) {
+						dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run categorizer on " + file.getName() + ". ");
+						return false;
+					}
+					
+					labeledData.addAll(moreLabeledData);
+				}
+				
+
 				List<JSONObject> jsonLabeledData = new ArrayList<JSONObject>();
-				for (TokenSpansDatum<CategoryList> datum : labeledData)
-					jsonLabeledData.add(datumTools.datumToJSON(datum));
+				try {
+					for (TokenSpansDatum<CategoryList> datum : labeledData) {
+						jsonLabeledData.add(datumTools.datumToJSON(datum));
+						TokenSpan span = datum.getTokenSpans()[0];
+						DocumentNLP document = span.getDocument();
+						jsonLabeledData.get(jsonLabeledData.size() - 1).put("startCharIndex", document.getToken(span.getSentenceIndex(), span.getStartTokenIndex()).getCharSpanStart());
+						jsonLabeledData.get(jsonLabeledData.size() - 1).put("endCharIndex", document.getToken(span.getSentenceIndex(), span.getEndTokenIndex() - 1).getCharSpanEnd());
+					}
+				} catch (JSONException e) {
+					return false;
+				}
 				
 				
 				if ((!outputDataLocation.isDirectory() && !outputData(jsonLabeledData))
@@ -261,10 +301,32 @@ public class NELLCategorizeNPMentions {
 				e.printStackTrace();
 				return null;
 			}
-		} else {
+		} else if (outputType == OutputType.JSON) {
 			for (JSONObject outputDatum : outputData)
 				str.append(outputDatum.toString()).append("\n");		
+		} else {
+			try {
+				for (JSONObject outputDatum : outputData) {
+					CategoryList categories = CategoryList.fromString(outputDatum.getString("label"), dataTools); // FIXME This is dumb
+					for (String category : categories.getCategories()) {
+						str.append((new Annotation(outputDatum.getInt("charSpanStart"), 
+												  outputDatum.getInt("charSpanEnd"), 
+												  AnnotationTypeNLPCat.NELL_CATEGORY.getType(), 
+												  categorizer.getName(), 
+												  outputDatum.getString("document"), 
+												  category, 
+												  null, 
+												  categories.getCategoryWeight(category), 
+												  annotationTime, 
+												  null)).toJsonString()).append("\n");
+					}
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				return null;
+			}
 		}
+		
 		return str.toString();
 	}
 	
@@ -287,10 +349,10 @@ public class NELLCategorizeNPMentions {
 		OutputWriter output = new OutputWriter();
 		OptionParser parser = new OptionParser();
 		parser.accepts("inputType").withRequiredArg()
-			.describedAs("PLAIN_TEXT or ANNOTATED determines whether input file(s) are text or already annotated")
+			.describedAs("PLAIN_TEXT, JSON, MICRO determines whether input file(s) are text,have NLP annotations in JSON, or have NLP annotations in micro-reading format")
 			.defaultsTo("PLAIN_TEXT");
 		parser.accepts("outputType").withRequiredArg()
-			.describedAs("JSON or TSV determines whether output data is stored as json objects or a tab-separated table")
+			.describedAs("JSON, TSV, MICRO determines whether output data is stored as json objects, tab-separated table, or micro-reading format")
 			.defaultsTo("JSON");
 		parser.accepts("maxThreads").withRequiredArg()
 			.describedAs("Maximum number of concurrent threads to use when annotating files")

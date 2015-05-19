@@ -311,7 +311,10 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			}
 			
 			data.add(datum);
-			this.datumId++;
+			
+			synchronized (this) {
+				this.datumId++;
+			}
 		}
 		
 		return data;
