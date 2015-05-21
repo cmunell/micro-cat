@@ -37,6 +37,11 @@
  		<version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
+ 		<groupId>edu.cmu.ml.rtw</groupId>
+ 		<artifactId>micro-cat-data</artifactId>
+ 		<version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
 		<groupId>org.apache.hadoop</groupId>
 		<artifactId>hadoop-mapreduce-client-core</artifactId>
 		<version>2.2.0</version>

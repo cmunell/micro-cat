@@ -129,6 +129,7 @@ public class CatDataTools extends DataTools {
 		this.addAnnotationTypeNLP(AnnotationTypeNLPCat.FAILED_FACC1);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPCat.AMBIGUOUS_FACC1);
 		this.addAnnotationTypeNLP(AnnotationTypeNLPCat.NELL_CATEGORY);
+		this.addAnnotationTypeNLP(AnnotationTypeNLPCat.STRING_CATEGORY);
 	}
 	
 	public static String cleanString(String str, boolean stem, boolean toLower, boolean removeSymbols) {
