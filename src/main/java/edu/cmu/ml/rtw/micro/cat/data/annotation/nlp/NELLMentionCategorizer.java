@@ -322,7 +322,7 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 
 	@Override
 	public String getName() {
-		return "micro-cat";
+		return "cmunell_cat-0.0.1";
 	}
 
 	@Override
