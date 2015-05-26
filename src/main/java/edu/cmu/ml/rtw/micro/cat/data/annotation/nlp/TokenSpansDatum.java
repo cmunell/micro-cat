@@ -252,7 +252,9 @@ public class TokenSpansDatum<L> extends Datum<L> {
 						if (!generalizedWeights.containsKey(generalization))
 							generalizedWeights.put(generalization, indicatorWeights.get(positiveIndicator));
 						else
-							generalizedWeights.put(generalization, Math.max(indicatorWeights.get(generalization), generalizedWeights.get(generalization)));
+							generalizedWeights.put(generalization, Math.max(
+																		(indicatorWeights.containsKey(generalization) ? indicatorWeights.get(generalization) : 0.0), 
+																		generalizedWeights.get(generalization)));
 					}
 				}
 				
