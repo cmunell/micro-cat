@@ -46,8 +46,8 @@ public class FACC1DocumentNLPInMemory extends DocumentNLPInMemory {
 		super(dataTools, documentAnnotation, pipeline, skipAnnotators);
 	}
 	
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, String name, String text, Language language, PipelineNLP pipeline, Collection<AnnotationTypeNLP<?>> skipAnnotators) {
-		super(dataTools, name, text, language, pipeline, skipAnnotators);
+	public FACC1DocumentNLPInMemory(CatDataTools dataTools, String name, String text, Language language, PipelineNLP pipeline, Collection<AnnotationTypeNLP<?>> skipAnnotators, boolean keepOriginalText) {
+		super(dataTools, name, text, language, pipeline, skipAnnotators, keepOriginalText);
 	}
 	
 	public FACC1DocumentNLPInMemory(CatDataTools dataTools,
@@ -260,7 +260,7 @@ public class FACC1DocumentNLPInMemory extends DocumentNLPInMemory {
 	
 	@Override
 	public Document makeInstanceFromText(String name, String text, Language language, PipelineNLP pipeline,
-			Collection<AnnotationTypeNLP<?>> skipAnnotators) {
-		return new FACC1DocumentNLPInMemory((CatDataTools)this.dataTools, name, text, language, pipeline, skipAnnotators);
+			Collection<AnnotationTypeNLP<?>> skipAnnotators, boolean keepOriginalText) {
+		return new FACC1DocumentNLPInMemory((CatDataTools)this.dataTools, name, text, language, pipeline, skipAnnotators, keepOriginalText);
 	}
 }
