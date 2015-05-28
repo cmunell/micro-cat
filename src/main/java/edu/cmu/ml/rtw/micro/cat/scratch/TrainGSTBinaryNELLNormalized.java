@@ -150,12 +150,12 @@ public class TrainGSTBinaryNELLNormalized {
 		}
 		
 		experimentName = options.valueOf("experimentName").toString();
-		randomSeed = (int)options.valueOf("randomSeed");
-		nellConfidenceThreshold = (double)options.valueOf("nellConfidenceThreshold");
-		nonPolysemousExamplesPerLabel = (int)options.valueOf("nonPolysemousExamplesPerLabel");
-		polysemousTestExamples = (int)options.valueOf("polysemousTestExamples");
-		lowConfidenceTestExamples = (int)options.valueOf("lowConfidenceTestExamples");
-		noBeliefTestExamples = (int)options.valueOf("noBeliefTestExamples");
+		randomSeed = (Integer)options.valueOf("randomSeed");
+		nellConfidenceThreshold = (Double)options.valueOf("nellConfidenceThreshold");
+		nonPolysemousExamplesPerLabel = (Integer)options.valueOf("nonPolysemousExamplesPerLabel");
+		polysemousTestExamples = (Integer)options.valueOf("polysemousTestExamples");
+		lowConfidenceTestExamples = (Integer)options.valueOf("lowConfidenceTestExamples");
+		noBeliefTestExamples = (Integer)options.valueOf("noBeliefTestExamples");
 		nonPolysemousDataSetName = options.valueOf("nonPolysemousDataSetName").toString();
 		documentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("documentSetName").toString());
 		

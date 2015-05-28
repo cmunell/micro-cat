@@ -17,6 +17,7 @@ public class CatProperties extends Properties {
 	private String hazyFacc1DataDirPath;
 	private String hazyFacc1SentenceDataDirPath;
 	private String polysemyDataFileDirPath;
+	private String CoNLLYagoDataDirPath;
 	private String nounPhraseNELLCategoryGazetteerPath;
 	private String NELLCategoryGeneralizationGazetteerPath;
 	private String NELLCategoryMutexGazetteerPath;
@@ -65,6 +66,8 @@ public class CatProperties extends Properties {
 		this.NELLNounPhraseStopWordGazetteerPath = loadProperty("NELLNounPhraseStopWordGazetteerPath");
 		this.bagOfWordsFeatureStopWordGazetteerPath = loadProperty("bagOfWordsFeatureStopWordGazetteerPath");
 		this.NELLDataFileDirPath = loadProperty("NELLDataFileDirPath");
+		this.CoNLLYagoDataDirPath = loadProperty("CoNLLYagoDataDirPath");
+	
 	}
 	
 	public String getGoogleApiKey() {
@@ -173,5 +176,9 @@ public class CatProperties extends Properties {
 	
 	public String getNELLDataFileDirPath() {
 		return this.NELLDataFileDirPath;
+	}
+	
+	public String getCoNLLYagoDataDirPath() {
+		return this.CoNLLYagoDataDirPath;
 	}
 }
