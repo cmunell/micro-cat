@@ -34,7 +34,7 @@
   	<dependency>
  		<groupId>edu.cmu.ml.rtw</groupId>
  		<artifactId>micro-util</artifactId>
- 		<version>0.0.1-SNAPSHOT</version>
+ 		<version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
  		<groupId>edu.cmu.ml.rtw</groupId>
