@@ -43,6 +43,8 @@ public class ConstructCoNLLYagoDocumentSet {
 		stanfordPipeline = new PipelineNLPStanford();
 		stanfordPipeline.initialize(null, new JSONTokenizer());
 		
+		System.out.println("Parsing yago files into documents...");
+		
 		Map<String, List<List<String>>>[] documentSets = splitYagoDataIntoDocumentSets(yagoInputFile);
 		Map<String, List<List<String>>> trainDocuments = documentSets[0];
 		Map<String, List<List<String>>> testaDocuments = documentSets[1];
@@ -137,9 +139,12 @@ public class ConstructCoNLLYagoDocumentSet {
 	}
 	
 	private static boolean constructAnnotatedDocumentSetFromYagoTsvLines(String name, Map<String, List<List<String>>> documentLines) {
+		System.out.println("Constructing document set " + name + "...");
+		
 		DocumentSetNLP<DocumentNLP> documentSet = new DocumentSetNLP<DocumentNLP>(name);
 		
 		for (Entry<String, List<List<String>>> entry : documentLines.entrySet()) {
+			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
 			DocumentNLP document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
 			documentSet.add(document);
 		}
@@ -147,6 +152,8 @@ public class ConstructCoNLLYagoDocumentSet {
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
 		if (!outputDirectory.mkdir())
 			return false;
+		
+		System.out.println("Outputting document set " + name + "...");
 		
 		return documentSet.saveToMicroDirectory(outputDirectory.getAbsolutePath(), null);
 	}
