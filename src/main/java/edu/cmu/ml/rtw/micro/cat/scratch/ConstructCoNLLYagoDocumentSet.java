@@ -35,9 +35,13 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 
 public class ConstructCoNLLYagoDocumentSet {
 	private static CatDataTools dataTools = new CatDataTools();
+	private static PipelineNLPStanford stanfordPipeline;
 	
 	public static void main(String[] args) {
 		File yagoInputFile = new File(args[0]);
+		
+		stanfordPipeline = new PipelineNLPStanford();
+		stanfordPipeline.initialize(null, new JSONTokenizer());
 		
 		Map<String, List<List<String>>>[] documentSets = splitYagoDataIntoDocumentSets(yagoInputFile);
 		Map<String, List<List<String>>> trainDocuments = documentSets[0];
@@ -149,9 +153,6 @@ public class ConstructCoNLLYagoDocumentSet {
 	
 	private static DocumentNLP constructAnnotatedDocumentFromYagoTsvLines(String documentName, List<List<String>> lines) {
 		Pair<JSONObject, Map<AnnotationTypeNLP<String>, List<Pair<Triple<Integer, Integer, Integer>, String>>>> jsonAndAnnotations = constructJSONObjectAndAnnotationsFromYagoTsvLines(documentName, lines);
-		
-		PipelineNLPStanford stanfordPipeline = new PipelineNLPStanford();
-		stanfordPipeline.initialize(null, new JSONTokenizer());
 		
 		PipelineNLPExtendable yagoPipeline = new PipelineNLPExtendable();
 		yagoPipeline.extend(new AnnotatorTokenSpan<String>() {
