@@ -104,7 +104,7 @@ public class ConstructCoNLLYagoDocumentSet {
 					
 					if (docIdParts[0].endsWith("testa"))
 						documentSet = "testa";
-					else if (docIdParts[1].endsWith("testb"))
+					else if (docIdParts[0].endsWith("testb"))
 						documentSet = "testb";
 					else
 						documentSet = "train";
