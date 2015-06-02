@@ -272,6 +272,7 @@ public class ConstructCoNLLYagoDocumentSet {
 						annotatedSpanStart = -1;
 						annotatedSpanEnd = -1;
 					} else if (lineParts[1].equals("B")) {
+						addAnnotation(annotations, sentenceIndex, annotatedSpanStart, annotatedSpanEnd, wikiUrl, freebaseTopic, freebaseTypes);
 						annotatedSpanStart = j;
 						annotatedSpanEnd = j+1;
 					} else {
@@ -287,6 +288,7 @@ public class ConstructCoNLLYagoDocumentSet {
 					if (lineParts.length > 6) {
 						freebaseTopic = lineParts[6];
 						freebaseTypes = freebaseGazetteer.getIds(freebaseTopic);
+						System.out.println(freebaseTopic + " " + freebaseTypes);
 					}
 
 					sentenceJson.getJSONArray("tokens").put(
