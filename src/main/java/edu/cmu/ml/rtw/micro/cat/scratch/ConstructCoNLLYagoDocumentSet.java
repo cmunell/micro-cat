@@ -147,6 +147,7 @@ public class ConstructCoNLLYagoDocumentSet {
 			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
 			DocumentNLP document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
 			documentSet.add(document);
+			break;
 		}
 		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
@@ -155,7 +156,7 @@ public class ConstructCoNLLYagoDocumentSet {
 		
 		System.out.println("Outputting document set " + name + "...");
 		
-		return documentSet.saveToMicroDirectory(outputDirectory.getAbsolutePath(), null);
+		return documentSet.saveToMicroDirectory(outputDirectory.getAbsolutePath(), dataTools.getAnnotationTypesNLP());
 	}
 	
 	private static DocumentNLP constructAnnotatedDocumentFromYagoTsvLines(String documentName, List<List<String>> lines) {
