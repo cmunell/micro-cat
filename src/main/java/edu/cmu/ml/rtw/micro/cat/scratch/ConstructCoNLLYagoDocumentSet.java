@@ -284,8 +284,8 @@ public class ConstructCoNLLYagoDocumentSet {
 					
 					if (lineParts.length > 4)
 						wikiUrl = lineParts[4];
-					if (lineParts.length > 5) {
-						freebaseTopic = lineParts[5];
+					if (lineParts.length > 6) {
+						freebaseTopic = lineParts[6];
 						freebaseTypes = freebaseGazetteer.getIds(freebaseTopic);
 					}
 
