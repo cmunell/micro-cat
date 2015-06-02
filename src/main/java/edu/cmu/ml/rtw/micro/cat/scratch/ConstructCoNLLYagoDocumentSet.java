@@ -147,7 +147,6 @@ public class ConstructCoNLLYagoDocumentSet {
 			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
 			DocumentNLP document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
 			documentSet.add(document);
-			break;
 		}
 		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
