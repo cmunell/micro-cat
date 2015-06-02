@@ -288,7 +288,6 @@ public class ConstructCoNLLYagoDocumentSet {
 					if (lineParts.length > 6) {
 						freebaseTopic = lineParts[6];
 						freebaseTypes = freebaseGazetteer.getIds(freebaseTopic);
-						System.out.println(freebaseTopic + " " + freebaseTypes);
 					}
 
 					sentenceJson.getJSONArray("tokens").put(
