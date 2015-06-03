@@ -13,7 +13,7 @@ array validLabels=(
 "/fashion/garment","/visual_art/color","/business/business_operation","/conferences/conference_series",
 "/location/continent","/location/country","/location/us_county","/finance/currency","/type/datetime",
 "/time/day_of_week","/medicine/disease","/medicine/drug","/business/industry","/government/election",
-"/people/ethnicity","/time/event","/film/film_festival","/food/food","0/government/government_agency",
+"/people/ethnicity","/time/event","/film/film_festival","/food/food","/government/government_agency",
 "/interests/hobby","/medicine/hospital","/travel/accommodation","/geography/island","/geography/lake",
 "/geography/geographical_feature","/language/human_language","/location/geocode","/location/location",
 "/book/magazine","/medicine/medical_treatment","/military/military_conflict","/royalty/monarch",
@@ -98,7 +98,7 @@ feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", t
 feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
 feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
 
-model lr=Areg(l1="0", l2="0", convergenceEpsilon=".001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };

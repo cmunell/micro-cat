@@ -172,9 +172,9 @@ public class TrainGSTBinary {
 		
 		dataTools = new CatDataTools(new OutputWriter(
 				new File(experimentOutputPath + ".debug.out"),
+				new File(experimentOutputPath + ".results.out"),
 				new File(experimentOutputPath + ".data.out"),
-				new File(experimentOutputPath + ".model.out"),
-				new File(experimentOutputPath + ".results.out")
+				new File(experimentOutputPath + ".model.out")
 				), properties);
 		
 		dataTools.setRandomSeed(randomSeed);
