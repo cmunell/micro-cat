@@ -98,13 +98,13 @@ feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", t
 feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
 feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
 
-model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.000001,.00001,.0001), trainingDimension="true");
+	dimension l2=Dimension(name="l2", values=(.00000001,.0000001,.000001), trainingDimension="true");
 	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
 	
 	model model=${lr};
