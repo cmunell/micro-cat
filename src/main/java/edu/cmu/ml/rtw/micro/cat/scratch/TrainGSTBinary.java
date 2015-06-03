@@ -166,11 +166,11 @@ public class TrainGSTBinary {
 		devDocumentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("devDocumentSetName").toString());
 		testDocumentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("testDocumentSetName").toString());
 		
-		CatProperties properties = new CatProperties();
+		properties = new CatProperties();
 		String experimentInputPath = new File(properties.getContextInputDirPath(), "/GSTBinary/" + experimentName + ".ctx").getAbsolutePath();
 		String experimentOutputPath = new File(properties.getExperimentOutputDirPath(), trainDocumentSetName.toString() + "/GSTBinary/" + experimentName).getAbsolutePath(); 
 		
-		CatDataTools dataTools = new CatDataTools(new OutputWriter(
+		dataTools = new CatDataTools(new OutputWriter(
 				new File(experimentOutputPath + ".debug.out"),
 				new File(experimentOutputPath + ".data.out"),
 				new File(experimentOutputPath + ".model.out"),
