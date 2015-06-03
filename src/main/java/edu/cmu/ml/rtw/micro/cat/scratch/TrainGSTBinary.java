@@ -56,7 +56,7 @@ public class TrainGSTBinary {
 		for (String category : categories.getCategories()) {
 			LabelIndicator<CategoryList> labelIndicator = new LabelIndicator<CategoryList>() {
 				public String toString() {
-					return category;
+					return category.replace('/', '_');
 				}
 				
 				@Override
