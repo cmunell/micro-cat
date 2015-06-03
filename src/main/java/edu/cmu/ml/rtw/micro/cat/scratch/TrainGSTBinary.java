@@ -87,6 +87,8 @@ public class TrainGSTBinary {
 	}
 	
 	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> constructDataSet(DocumentSetNLP<DocumentNLP> documentSet) {
+		context.getDatumTools().getDataTools().getOutputWriter().debugWriteln("Constructing data from " + documentSet.getName() + " documents...");
+		
 		Set<String> documentNames = documentSet.getDocumentNames();
 		DataSet<TokenSpansDatum<CategoryList>, CategoryList> dataSet = new DataSet<TokenSpansDatum<CategoryList>, CategoryList>(datumTools, null);
 		for (String documentName : documentNames) {
