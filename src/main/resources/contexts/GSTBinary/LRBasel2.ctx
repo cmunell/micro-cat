@@ -10,7 +10,7 @@ array validLabels=(
 "/medicine/brain_structure","/transportation/bridge","/architecture/building",
 "/architecture/lighthouse_construction_material",
 "/celebrities/celebrity","/food/cheese","/dining/chef","/chemistry/chemical_compound","/location/citytown",
-"/fashion/garment","/visual_art/color","/business/business_operation","/conferences/conference_series",0
+"/fashion/garment","/visual_art/color","/business/business_operation","/conferences/conference_series",
 "/location/continent","/location/country","/location/us_county","/finance/currency","/type/datetime",
 "/time/day_of_week","/medicine/disease","/medicine/drug","/business/industry","/government/election",
 "/people/ethnicity","/time/event","/film/film_festival","/food/food","0/government/government_agency",
