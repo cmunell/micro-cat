@@ -107,9 +107,13 @@ public class TrainGSTBinary {
 				if (categories.length == 1 && categories[0].equals(""))
 					continue;
 				
-				if (datumId == 24601)
+				if (datumId == 24601) {
+					for (Entry<TokenSpan, Set<String>> entry1 : spanCategories.entrySet()) {
+						System.out.println(entry1.getKey().toString() + " " + entry1.getKey().getDocument().getName() + " " + entry1.getKey().getSentenceIndex() + " " + entry1.getKey().getStartTokenIndex());
+					}
+					
 					System.out.println(entry.getKey().toString() + " " + entry.getValue().size() + " " + categories.length + " " + categories[0]);
-				
+				}
 				dataSet.add(
 					new TokenSpansDatum<CategoryList>(datumId, 
 							new TokenSpan[] { entry.getKey() }, 
