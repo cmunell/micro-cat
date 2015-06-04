@@ -103,10 +103,14 @@ public class TrainGSTBinary {
 			}
 		
 			for (Entry<TokenSpan, Set<String>> entry : spanCategories.entrySet()) {
+				String[] categories = entry.getValue().toArray(new String[0]);
+				if (categories.length == 1 && categories[0].equals(""))
+					continue;
+				
 				dataSet.add(
 					new TokenSpansDatum<CategoryList>(datumId, 
 							new TokenSpan[] { entry.getKey() }, 
-							new CategoryList(entry.getValue().toArray(new String[0]), 0), 
+							new CategoryList(categories, 0), 
 							false)
 				);
 				datumId++;
