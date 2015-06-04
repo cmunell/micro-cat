@@ -107,6 +107,9 @@ public class TrainGSTBinary {
 				if (categories.length == 1 && categories[0].equals(""))
 					continue;
 				
+				if (datumId == 24601)
+					System.out.println(entry.getKey().toString() + " " + categories.length);
+				
 				dataSet.add(
 					new TokenSpansDatum<CategoryList>(datumId, 
 							new TokenSpan[] { entry.getKey() }, 
