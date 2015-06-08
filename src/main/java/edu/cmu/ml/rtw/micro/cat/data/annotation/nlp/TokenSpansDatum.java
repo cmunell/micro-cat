@@ -654,7 +654,7 @@ public class TokenSpansDatum<L> extends Datum<L> {
 						continue;
 					StringBuilder ngram = new StringBuilder();
 					for (int j = i; j < i + this.n; j++) {
-						ngram.append(document.getToken(sentenceIndex, j)).append(" ");
+						ngram.append(document.getTokenStr(sentenceIndex, j)).append(" ");
 					}
 					
 					String ngramStr = ngram.toString().trim();
