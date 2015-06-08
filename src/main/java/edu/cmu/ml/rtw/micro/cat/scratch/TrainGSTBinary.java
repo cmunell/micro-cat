@@ -100,6 +100,11 @@ public class TrainGSTBinary {
 				if (!spanCategories.containsKey(annotation.getFirst()))
 					spanCategories.put(annotation.getFirst(), new HashSet<String>());
 				spanCategories.get(annotation.getFirst()).add(annotation.getSecond());
+				
+				if (annotation.getFirst().getDocument().getName().equals("1168testb_CRICKET")) {
+					if (annotation.getFirst().toString().equals("Waqar Younis"))
+						System.out.println("EXAMPLE " + annotation.getFirst() + " " + annotation.getSecond() + "\n");
+				}
 			}
 		
 			for (Entry<TokenSpan, Set<String>> entry : spanCategories.entrySet()) {
@@ -114,6 +119,7 @@ public class TrainGSTBinary {
 					
 					System.out.println(entry.getKey().toString() + " " + entry.getValue().size() + " " + categories.length + " " + categories[0]);
 				}
+				
 				dataSet.add(
 					new TokenSpansDatum<CategoryList>(datumId, 
 							new TokenSpan[] { entry.getKey() }, 
