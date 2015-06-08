@@ -355,6 +355,7 @@ public class TokenSpansDatum<L> extends Datum<L> {
 				
 				@Override 
 				public String[] extract(TokenSpansDatum<L> tokenSpansDatum) {
+					System.out.println("FirstTokenSpan Extracting " + tokenSpansDatum.getTokenSpans()[0].toString() );
 					return new String[] { tokenSpansDatum.getTokenSpans()[0].toString() };
 				}
 			});
