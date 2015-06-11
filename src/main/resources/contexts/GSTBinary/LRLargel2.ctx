@@ -62,9 +62,9 @@ ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
 ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
 str_fn pre=Affix(nMin="3", nMax="3", type="PREFIX"); 
 str_fn suf=Affix(nMin="3", nMax="3", type="SUFFIX"); 
-str_fn filter=Filter(type="SUBSTRING");
-str_fn filter_s=Filter(type="SUFFIX");
-str_fn filter_p=Filter(type="PREFIX");
+str_fn filter=Filter(type="SUBSTRING", filter="", filterTransform=Identity());
+str_fn filter_s=Filter(type="SUFFIX", filter="", filterTransform=Identity());
+str_fn filter_p=Filter(type="PREFIX", filter="", filterTransform=Identity());
 
 feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
 feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
