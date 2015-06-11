@@ -55,7 +55,7 @@ ts_fn ctxb3=NGramContext(n="3", type="BEFORE");
 ts_fn ctxa3=NGramContext(n="3", type="AFTER");
 ts_fn sent1=NGramSentence(n="1", noSpan="true");
 ts_fn sent2=NGramSentence(n="2", noSpan="true");
-ts_fn doc1=NGramSentence(n="1", noSentence="true");
+ts_fn doc1=NGramDocument(n="1", noSentence="true");
 ts_str_fn pos=PoS();
 ts_str_fn strDef=String(cleanFn="CatDefaultCleanFn");
 ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
