@@ -43,28 +43,6 @@ evaluation f1=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="1");
 evaluation prec=Precision(weighted="false", filterLabel="true");
 evaluation recall=Recall(weighted="false", filterLabel="true");
 
-feature fcpna1=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((((<p:RB,VB>)*<p:VB>)|POS)(DT)?(<p:JJ,NN>)*<p:NN>).*");
-feature fcpna2=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((((<p:RB,VB>)*<p:VB>)|POS){~'that'}{~'because'}(IN)+).*");
-feature fcpnb1=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NNP,NN,JJ,PRP>)+(SYM)?(<p:VB,RB>)*<p:VB>(<p:VB,RB>)*{~'that'}{~'because'}(IN|TO|JJ)*");
-feature fcpnb2=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN,JJ,PRP> ((<p:NNP,NN,JJ,PRP>)+(SYM)?(<p:VB,RB>)*<p:VB>(<p:VB,RB>)*{~'that'}{~'because'}(IN|TO|JJ)*)");
-feature fcpnb3=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*");
-feature fcpnb4=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN> ((<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*)");
-feature fcpnb5=GramContextPattern(capturePart="BEFORE", captureGroup="0", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern="^(<p:NN,JJ,NNP>)+(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*");
-feature fcpnb6=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".*<<~p:CD,NNP,NN,JJ> ((<p:NN,JJ,NNP>)+(<p:NN,NNP>)(SYM)?{~'that'}{~'because'}(IN|TO|JJ)*)");
-feature fcpb1=GramContextPattern(capturePart="BEFORE", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", beforePattern=".* (IN|TO|JJ)");
-feature fcpa1=GramContextPattern(capturePart="AFTER", captureGroup="1", minFeatureOccurrence="2", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans", afterPattern="((<p:RB,VB>)*<p:VB>).*");
-
-feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
-feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
-feature ftcnt=TokenCount(maxCount="5", tokenExtractor="AllTokenSpans");
-feature fform=StringForm(stringExtractor="FirstTokenSpan", minFeatureOccurrence="2");
-
-feature fgnp=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="FirstTokenSpan", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnps=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="SentenceNELLNounPhrases", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd1=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentUnigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd2=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentBigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentTrigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-
 ts_fn head=Head();
 ts_fn ins1=NGramInside(n="1", noHead="true");
 ts_fn ins2=NGramInside(n="2", noHead="true");
@@ -82,6 +60,17 @@ str_fn filter=Filter(type="SUBSTRING");
 str_fn filter_s=Filter(type="SUFFIX");
 str_fn filter_p=Filter(type="PREFIX");
 
+feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
+feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
+feature ftcnt=TokenCount(maxCount="5", tokenExtractor="AllTokenSpans");
+feature fform=StringForm(stringExtractor="FirstTokenSpan", minFeatureOccurrence="2");
+
+feature fgnp=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="FirstTokenSpan", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnps=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="SentenceNELLNounPhrases", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd1=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentUnigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd2=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentBigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentTrigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+
 feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
 feature fphrh1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
 feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
@@ -92,11 +81,6 @@ feature fposb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pos} o ${ctxa1}));
 feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${strStem} o ${ctxb1}));
 feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${strStem} o ${ctxa1}));
-feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${head}));
-feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${head}));
-feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${ins1}));
-feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
-feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
 
 model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {
@@ -104,7 +88,7 @@ model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.0000000001,.000000001,.00000001), trainingDimension="true");
+	dimension l1=Dimension(name="l1", values=(.0000000001,.000000001,.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1), trainingDimension="true");
 	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
 	
 	model model=${lr};

@@ -1,0 +1,96 @@
+value randomSeed="1";
+value maxThreads="33";
+value trainOnDev="false";
+value errorExampleExtractor="FirstTokenSpan";
+array validLabels=(
+"/education/field_of_study","/aviation/airport","/biology/animal","/architecture/architect","/medicine/artery",
+"/spaceflight/astronaut","/sports/pro_athlete","/travel/tourist_attraction","/automotive/engine",
+"/automotive/company","/automotive/model","/sports/sports_championship","/en/beach","/food/beverage",
+"/internet/blog","/games/game","/medicine/anatomical_structure","/medicine/bone","/book/book",
+"/medicine/brain_structure","/transportation/bridge","/architecture/building",
+"/architecture/lighthouse_construction_material",
+"/celebrities/celebrity","/food/cheese","/dining/chef","/chemistry/chemical_compound","/location/citytown",
+"/fashion/garment","/visual_art/color","/business/business_operation","/conferences/conference_series",
+"/location/continent","/location/country","/location/us_county","/finance/currency","/type/datetime",
+"/time/day_of_week","/medicine/disease","/medicine/drug","/business/industry","/government/election",
+"/people/ethnicity","/time/event","/film/film_festival","/food/food","/government/government_agency",
+"/interests/hobby","/medicine/hospital","/travel/accommodation","/geography/island","/geography/lake",
+"/geography/geographical_feature","/language/human_language","/location/geocode","/location/location",
+"/book/magazine","/medicine/medical_treatment","/military/military_conflict","/royalty/monarch",
+"/time/month","/protected_sites/protected_site","/geography/mountain","/geography/mountain_range",
+"/film/film","/medicine/muscle","/architecture/museum","/music/album","/music/artist","/music/festival",
+"/music/genre","/music/group_member","/music/instrument","/music/composition","/medicine/nerve",
+"/book/newspaper","/organization/non_profit_organization","/organization/organization",
+"/protected_sites/protected_site",
+"/people/person","/en/african_people","/en/asian","/en/australian_people","/m/044038p","/m/043_yvy",
+"/m/05z14zp","/religion/place_of_worship","/book/poem","/government/government_office_or_title",
+"/government/political_party","/government/politician","/en/port",
+"/people/profession","/computer/programming_language",
+"/biology/protein","/broadcast/radio_station","/food/recipe","/music/record_label","/religion/religion",
+"/dining/restaurant","/geography/river","/education/educational_institution","/business/shopping_center",
+"/architecture/skyscraper","/sports/sport","/sports/sports_equipment","/sports/sports_league",
+"/sports/sports_team","/sports/sports_facility","/tv/tv_network","/tv/tv_program","/broadcast/tv_station",
+"/base/terrorism/terrorist_organization","/business/trade_union","/games/game","/en/train_station",
+"/travel/transportation_mode","/education/university","/medicine/vein","/cvg/computer_videogame",
+"/cvg/cvg_platform","/visual_art/visual_art_form","/visual_art/visual_artist",
+"/visual_art/art_period_movement","/internet/website","/wine/wine_type","/wine/wine_producer","/book/author"
+);
+
+evaluation accuracy=Accuracy();
+evaluation accuracyBase=Accuracy(computeBaseline="true");
+evaluation f.5=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="0.5");
+evaluation f1=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="1");
+evaluation prec=Precision(weighted="false", filterLabel="true");
+evaluation recall=Recall(weighted="false", filterLabel="true");
+
+ts_fn head=Head();
+ts_fn ins1=NGramInside(n="1", noHead="true");
+ts_fn ins2=NGramInside(n="2", noHead="true");
+ts_fn ins3=NGramInside(n="3", noHead="true");
+ts_fn ctxb1=NGramContext(n="1", type="BEFORE");
+ts_fn ctxa1=NGramContext(n="1", type="AFTER");
+ts_fn sent1=NGramSentence(n="1", noSpan="true");
+ts_str_fn pos=PoS();
+ts_str_fn strDef=String(cleanFn="CatDefaultCleanFn");
+ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
+ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
+str_fn pre=Affix(nMin="3", nMax="3", type="PREFIX"); 
+str_fn suf=Affix(nMin="3", nMax="3", type="SUFFIX"); 
+str_fn filter=Filter(type="SUBSTRING");
+str_fn filter_s=Filter(type="SUFFIX");
+str_fn filter_p=Filter(type="PREFIX");
+
+feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
+feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
+feature ftcnt=TokenCount(maxCount="5", tokenExtractor="AllTokenSpans");
+feature fform=StringForm(stringExtractor="FirstTokenSpan", minFeatureOccurrence="2");
+
+feature fgnp=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="FirstTokenSpan", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnps=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="SentenceNELLNounPhrases", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd1=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentUnigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd2=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentBigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentTrigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
+
+feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
+feature fphrh1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
+feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
+feature fphr2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins2}));
+feature fphr3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins3}));
+
+feature fposb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${pos} o ${ctxb1}));
+feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pos} o ${ctxa1}));
+feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${strStem} o ${ctxb1}));
+feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${strStem} o ${ctxa1}));
+
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+{
+	array validLabels=${validLabels};
+};
+
+gs g=GridSearch() {
+	dimension l2=Dimension(name="l1", values=(.0000000001,.000000001,.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1), trainingDimension="true");
+	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
+	
+	model model=${lr};
+	evaluation evaluation=${accuracy};
+};
