@@ -52,7 +52,7 @@ ts_fn ctxa1=NGramContext(n="1", type="AFTER");
 ts_fn ctxb2=NGramContext(n="2", type="BEFORE");
 ts_fn ctxa2=NGramContext(n="2", type="AFTER");
 ts_fn ctxb3=NGramContext(n="3", type="BEFORE");
-ts_fn ctxa3=NGramContext(n="3", type="AFTER")
+ts_fn ctxa3=NGramContext(n="3", type="AFTER");
 ts_fn sent1=NGramSentence(n="1", noSpan="true");
 ts_fn sent2=NGramSentence(n="2", noSpan="true");
 ts_fn doc1=NGramSentence(n="1", noSentence="true");
