@@ -339,11 +339,31 @@ rs rules=RuleSet() {
 	rule sent2sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM}),
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) ,
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
 								value referenceName = "rfsent1";
+							});
+
+	rule sent3sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) ,
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+
+	rule sent3sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) ,
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
 							});
 
 	rule sentDoc1 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent1})))
@@ -353,9 +373,59 @@ rs rules=RuleSet() {
 								vocabFilterInit="FULL", 
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
-									value referenceName = ${RULE};
+									value referenceName = "rfdoc1";
 								});
 	
+	rule sentDoc2 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc2}, 
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL"), 
+								vocabFilterInit="FULL", 
+								fn=(${strStem} o ${doc2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc2";
+								});
+
+	rule sentDoc3 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc3}, 
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL"), 
+								vocabFilterInit="FULL", 
+								fn=(${strStem} o ${doc3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc3";
+								});
+
+	rule doc2doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc1},
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) ,
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc1";
+							});
+
+	rule doc3doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc1},
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) ,
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc1";
+							});
+
+	rule doc3doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc2},
+								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) ,
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc2";
+							});
+
 };
 
 model lg=LogistmarGramression(rules=${rules}, t=".2", l2="0", convergenceEpsilon=".001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
