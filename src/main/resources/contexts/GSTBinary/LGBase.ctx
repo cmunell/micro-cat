@@ -366,7 +366,7 @@ rs rules=RuleSet() {
 								value referenceName = "rfsent2";
 							});
 
-	rule sentDoc1 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent1})))
+	rule sentDoc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc1}, 
 								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()), 
@@ -376,7 +376,7 @@ rs rules=RuleSet() {
 									value referenceName = "rfdoc1";
 								});
 	
-	rule sentDoc2 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent2})))
+	rule sentDoc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc2}, 
 								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()), 
@@ -386,7 +386,7 @@ rs rules=RuleSet() {
 									value referenceName = "rfdoc2";
 								});
 
-	rule sentDoc3 = (TokenSpanFnDataVocab(fn=(${strStem} o ${sent3})))
+	rule sentDoc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc3}, 
 								vocabFilterFn=Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()), 
@@ -428,7 +428,7 @@ rs rules=RuleSet() {
 
 };
 
-model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
+model lg=LogistmarGramression(rules=${rules}, t=".05", l2="0", convergenceEpsilon=".001", maxTrainingExamples="260001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };
