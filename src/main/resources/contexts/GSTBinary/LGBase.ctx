@@ -473,7 +473,7 @@ rs rules=RuleSet() {
 							}
 					  );	
 					  
-	rule posb2posb3 = (TokenSpanFnDataVocab(fn=(${pos} o ${ctxb2})))
+	rule posb2posb3 = (TokenSpanFnFilteredVocab(fn=(${pos} o ${ctxb2})))
 					  -> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fposb3},
 							vocabFilterFn=Identity(),
@@ -497,7 +497,7 @@ rs rules=RuleSet() {
 							}
 					  );
 					  
-	rule ctxb2ctxb3 = (TokenSpanFnDataVocab(fn=(${strStem} o ${ctxb2})))
+	rule ctxb2ctxb3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${ctxb2})))
 					  -> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fctxb3},
 							vocabFilterFn=Identity(),
@@ -521,7 +521,7 @@ rs rules=RuleSet() {
 							}
 					  );	
 					  
-	rule posa2posa3 = (TokenSpanFnDataVocab(fn=(${pos} o ${ctxa2})))
+	rule posa2posa3 = (TokenSpanFnFilteredVocab(fn=(${pos} o ${ctxa2})))
 					  -> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fposa3},
 							vocabFilterFn=Identity(),
@@ -545,7 +545,7 @@ rs rules=RuleSet() {
 							}
 					  );
 					  
-	rule ctxa2ctxa3 = (TokenSpanFnDataVocab(fn=(${strStem} o ${ctxa2})))
+	rule ctxa2ctxa3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${ctxa2})))
 					  -> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fctxa3},
 							vocabFilterFn=Identity(),
