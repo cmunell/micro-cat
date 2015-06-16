@@ -120,7 +120,7 @@ rs rules=RuleSet() {
 	rule gnpSent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -130,7 +130,7 @@ rs rules=RuleSet() {
 	rule gnpSent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -140,7 +140,7 @@ rs rules=RuleSet() {
 	rule gnpSent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -150,7 +150,7 @@ rs rules=RuleSet() {
 	rule gnps1Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -160,7 +160,7 @@ rs rules=RuleSet() {
 	rule gnps1Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -170,7 +170,7 @@ rs rules=RuleSet() {
 	rule gnps1Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -180,7 +180,7 @@ rs rules=RuleSet() {
 	rule gnps2Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -190,7 +190,7 @@ rs rules=RuleSet() {
 	rule gnps2Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -200,7 +200,7 @@ rs rules=RuleSet() {
 	rule gnps2Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -210,7 +210,7 @@ rs rules=RuleSet() {
 	rule gnps3Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -220,7 +220,7 @@ rs rules=RuleSet() {
 	rule gnps3Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -230,7 +230,7 @@ rs rules=RuleSet() {
 	rule gnps3Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -240,7 +240,7 @@ rs rules=RuleSet() {
 	rule gnpd1Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -250,7 +250,7 @@ rs rules=RuleSet() {
 	rule gnpd1Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -260,7 +260,7 @@ rs rules=RuleSet() {
 	rule gnpd1Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -270,7 +270,7 @@ rs rules=RuleSet() {
 	rule gnpd2Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -280,7 +280,7 @@ rs rules=RuleSet() {
 	rule gnpd2Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -290,7 +290,7 @@ rs rules=RuleSet() {
 	rule gnpd2Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -300,7 +300,7 @@ rs rules=RuleSet() {
 	rule gnpd3Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -310,7 +310,7 @@ rs rules=RuleSet() {
 	rule gnpd3Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -320,7 +320,7 @@ rs rules=RuleSet() {
 	rule gnpd3Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent3},
-								vocabFilterFn=(${strStem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent3}),
 								tokenExtractor="AllTokenSpans") {
@@ -330,7 +330,7 @@ rs rules=RuleSet() {
 	rule sent2sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -340,7 +340,7 @@ rs rules=RuleSet() {
 	rule sent3sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent1},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent1}),
 								tokenExtractor="AllTokenSpans") {
@@ -350,7 +350,7 @@ rs rules=RuleSet() {
 	rule sent3sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fsent2},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${sent2}),
 								tokenExtractor="AllTokenSpans") {
@@ -360,7 +360,7 @@ rs rules=RuleSet() {
 	rule sentDoc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc1}, 
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${strStem}), 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
 								vocabFilterInit="FULL", 
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
@@ -370,7 +370,7 @@ rs rules=RuleSet() {
 	rule sentDoc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc2}, 
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${strStem}), 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
 								vocabFilterInit="FULL", 
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
@@ -380,7 +380,7 @@ rs rules=RuleSet() {
 	rule sentDoc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc3}, 
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${strStem}), 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
 								vocabFilterInit="FULL", 
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
@@ -390,7 +390,7 @@ rs rules=RuleSet() {
 	rule doc2doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc1},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${doc1}),
 								tokenExtractor="AllTokenSpans") {
@@ -400,7 +400,7 @@ rs rules=RuleSet() {
 	rule doc3doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc3})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc1},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${doc1}),
 								tokenExtractor="AllTokenSpans") {
@@ -410,7 +410,7 @@ rs rules=RuleSet() {
 	rule doc3doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fdoc2},
-								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${strStem}),
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${stem}),
 								vocabFilterInit="FULL",
 								fn=(${strStem} o ${doc2}),
 								tokenExtractor="AllTokenSpans") {
@@ -420,7 +420,7 @@ rs rules=RuleSet() {
 	rule phrhSent = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent1},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent1}),
 							tokenExtractor="AllTokenSpans") {
@@ -431,7 +431,7 @@ rs rules=RuleSet() {
 	rule phrSent1 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent1},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent1}),
 							tokenExtractor="AllTokenSpans") {
@@ -442,7 +442,7 @@ rs rules=RuleSet() {
 	rule phrSent2 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins2})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent2},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent2}),
 							tokenExtractor="AllTokenSpans") {
@@ -453,7 +453,7 @@ rs rules=RuleSet() {
 	rule phrSent3 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins3})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent3},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent3}),
 							tokenExtractor="AllTokenSpans") {
