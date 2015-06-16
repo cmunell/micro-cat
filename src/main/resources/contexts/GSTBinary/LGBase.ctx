@@ -70,6 +70,7 @@ str_fn gaz=Gazetteer(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9");
 str_fn split1=Split(chunkSize="1");
 str_fn split2=Split(chunkSize="2");
 str_fn split3=Split(chunkSize="3");
+str_fn stem=Clean(cleanFn="CatStemCleanFn");
 
 feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
 feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
@@ -419,7 +420,7 @@ rs rules=RuleSet() {
 	rule phrhSent = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent1},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${strStem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent1}),
 							tokenExtractor="AllTokenSpans") {
@@ -430,7 +431,7 @@ rs rules=RuleSet() {
 	rule phrSent1 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent1},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${strStem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent1}),
 							tokenExtractor="AllTokenSpans") {
@@ -441,7 +442,7 @@ rs rules=RuleSet() {
 	rule phrSent2 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins2})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent2},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${strStem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent2}),
 							tokenExtractor="AllTokenSpans") {
@@ -452,7 +453,7 @@ rs rules=RuleSet() {
 	rule phrSent3 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins3})))
 					-> (TokenSpanFnFilteredVocab(
 							vocabFeature=${fsent3},
-							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${strStem}) o ${strStem}),
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${strStem}),
 							vocabFilterInit="FULL",
 							fn=(${strStem} o ${sent3}),
 							tokenExtractor="AllTokenSpans") {
