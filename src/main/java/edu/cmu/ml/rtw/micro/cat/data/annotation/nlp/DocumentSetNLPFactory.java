@@ -9,6 +9,17 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * 
+ * DocumentSetNLPFactory constructs NLP document sets 
+ * from files stored on disk.  This gives a systematic
+ * way in which experiments (e.g. 
+ * edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinary) can
+ * run on various sets of documents.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class DocumentSetNLPFactory {
 	public enum SetName {
 		HazyFacc1,

@@ -9,6 +9,16 @@ import org.apache.hadoop.io.Text;
 
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 
+/**
+ * @deprecated
+ * HConstructFACC1TypeAlt is an alternative
+ * method to producing the output of HConstructFACC1Type.
+ * I think maybe it was too slow or something, so I 
+ * stopped trying to do it this way.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class HConstructFACC1TypeAlt {
 	
 	public static class Mapper extends HRun.PolyMapper<Object, Text, Text, Text> {

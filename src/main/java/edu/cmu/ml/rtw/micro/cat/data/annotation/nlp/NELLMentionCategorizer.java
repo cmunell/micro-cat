@@ -31,6 +31,17 @@ import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * NELLMentionCategorizer annotates noun-phrase token spans
+ * with their NELL categories.  It uses a separate binary classification
+ * model to make a separate prediction for each NELL category according
+ * to the noun-phrase's document context, and then optionally
+ * chooses a consistent set of these categories according to 
+ * NELL mutual exclusivity and hierarchical constraints.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 	private static final AnnotationType<?>[] REQUIRED_ANNOTATIONS = new AnnotationType<?>[] {
 		AnnotationTypeNLP.TOKEN,
@@ -74,6 +85,26 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			 1);
 	}
 	
+	/**
+	 * 
+	 * @param validCategories are categories that will be included in the output
+	 * 
+	 * @param mentionModelThreshold NELL confidence threshold above which the 
+	 * context aware binary classification models are not used to classify 
+	 * noun-phrases, and NELL's belief about categories without respecting the context
+	 * is used instead
+	 * 
+	 * @param labelType determines whether output categories are weighted, and
+	 * whether NELL's mutual exclusivity and hierarchical constraints are enforced
+	 * 
+	 * @param featuresFile path to file where classification model feature vocabularies
+	 * are stored 
+	 * 
+	 * @param modelFilePathPrefix prefix of paths to files where classification models are
+	 * stored (each model file has the same prefix, but followed by the category name)
+	 * 
+	 * @param maxThreads
+	 */
 	public NELLMentionCategorizer(CategoryList validCategories, double mentionModelThreshold, LabelType labelType, File featuresFile, String modelFilePathPrefix, int maxThreads) {
 		this(TokenSpansDatum.getCategoryListTools(new CatDataTools()),
 			 validCategories,
@@ -84,6 +115,20 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			 1);
 	}
 	
+	/**
+	 * 
+	 * @param validCategories are categories that will be included in the output
+	 * 
+	 * @param mentionModelThreshold NELL confidence threshold above which the 
+	 * context aware binary classification models are not used to classify 
+	 * noun-phrases, and NELL's belief about categories without respecting the context
+	 * is used instead
+	 * 
+	 * @param labelType determines whether output categories are weighted, and
+	 * whether NELL's mutual exclusivity and hierarchical constraints are enforced
+	 * 
+	 * @param maxThreads
+	 */
 	public NELLMentionCategorizer(CategoryList validCategories, double mentionModelThreshold, LabelType labelType, int maxThreads) {
 		this(TokenSpansDatum.getCategoryListTools(new CatDataTools()),
 			 validCategories,
@@ -94,6 +139,28 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			 maxThreads);
 	}
 
+	/**
+	 * 
+	 * @param datumTools
+	 * 
+	 * @param validCategoriesType determines categories that will be included in the output
+	 * 
+	 * @param mentionModelThreshold NELL confidence threshold above which the 
+	 * context aware binary classification models are not used to classify 
+	 * noun-phrases, and NELL's belief about categories without respecting the context
+	 * is used instead
+	 * 
+	 * @param labelType determines whether output categories are weighted, and
+	 * whether NELL's mutual exclusivity and hierarchical constraints are enforced
+	 * 
+	 * @param featuresFile path to file where classification model feature vocabularies
+	 * are stored 
+	 * 
+	 * @param modelFilePathPrefix prefix of paths to files where classification models are
+	 * stored (each model file has the same prefix, but followed by the category name)
+	 * 
+	 * @param maxThreads
+	 */
 	public NELLMentionCategorizer(Datum.Tools<TokenSpansDatum<CategoryList>, CategoryList> datumTools, CategoryList.Type validCategoriesType, double mentionModelThreshold, LabelType labelType, File featuresFile, String modelFilePathPrefix, int maxThreads) {
 		this(datumTools,
 			new CategoryList(validCategoriesType, new CatDataTools()),
@@ -104,7 +171,29 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			maxThreads);
 	}
 
-	
+	/**
+	 * 
+	 * @param datumTools
+	 * 
+	 * @param validCategories are categories that will be included in the output
+	 * 
+	 * @param mentionModelThreshold NELL confidence threshold above which the 
+	 * context aware binary classification models are not used to classify 
+	 * noun-phrases, and NELL's belief about categories without respecting the context
+	 * is used instead
+	 * 
+	 * @param labelType determines whether output categories are weighted, and
+	 * whether NELL's mutual exclusivity and hierarchical constraints are enforced
+	 * 
+	 * @param featuresFile path to file where classification model feature vocabularies
+	 * are stored 
+	 * 
+	 * @param modelFilePathPrefix prefix of paths to files where classification models are
+	 * stored (each model file has the same prefix, but followed by the category name)
+	 * 
+	 * @param maxThreads
+	 *
+	 */
 	public NELLMentionCategorizer(Datum.Tools<TokenSpansDatum<CategoryList>, CategoryList> datumTools, CategoryList validCategories, double mentionModelThreshold, LabelType labelType, File featuresFile, String modelFilePathPrefix, int maxThreads) {
 		this.datumId = 0;
 		this.context = new Context<TokenSpansDatum<CategoryList>, CategoryList>(datumTools);

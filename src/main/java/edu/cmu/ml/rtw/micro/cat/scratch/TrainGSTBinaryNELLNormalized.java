@@ -19,7 +19,59 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLDataSetFactory;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
-
+/**
+ * TrainGSTBinaryNELLNormalized runs the 
+ * edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary
+ * model training/evaluation task on noun-phrase NELL
+ * categorization data produced by 
+ * edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLDataSetFactory.
+ * 
+ * The NELLDataSetFactory produces training data from the 
+ * Hazy-FACC1 data set (constructed from ClueWeb09 using 
+ * edu.cmu.ml.rtw.micro.cat.hadoop.HConstructHazyFACC1) that
+ * has noun-phrases labeled with their NELL categories.  The
+ * training data only consists of noun-phrases where NELL only
+ * has one set of consistent category beliefs above 'nellConfidenceThreshold'
+ * confidence (so NELL believes the noun-phrase is non-polysemous). 
+ * The training data is also constructed such that there will be
+ * at least 'nonPolysemousExamplesPerLabel' noun-phrase mentions
+ * per category (unless this number of some category
+ * does not exist in the Hazy-FACC1 data set (note that Hazy-FACC1
+ * was only constructed from a small fraction of all of ClueWeb09)).
+ * 
+ * NELLDataSetFactory also produces a data set containing only noun-phrase
+ * mentions that NELL believes are polysemous, a data set containing 
+ * noun-phrase mentions that NELL has only low confidence beliefs about, 
+ * a data set containing noun-phrase mentions that NELL has no belief
+ * about, and non-polysemous data sets that don't have the 
+ * 'nonPolysemousExamplesPerLabel' minimum noun-phrase per category
+ * constraint that the training data has.  These data sets are used
+ * for evaluating the trained models.
+ * 
+ * ValidationGSTBinary reads in a ctx script (from src/main/resources/contexts/GSTBinaryNELLNormalized),
+ * and trains a separate binary classification for each NELL category listed
+ * as a 'validLabel' in the script.   
+ * 
+ * Assuming an 'Areg' model is specified
+ * in the ctx script (this is a wrapper around Anthony Platanios' 'learn'
+ * library AdaGrad logistic regression implementation), each classifier will
+ * be trained by a data set containing at least 20% positive examples.  The ctx
+ * script should also specify a grid-search for the posterior threshold above which
+ * an example is interpreted as 'positive' in order to deal with the biased
+ * sample (this grid-search is performed over an unbiased non-polysemous dev set 
+ * created by NELLDataSetFactory). This biased sampling + grid-search process is
+ * done because otherwise the logistic regression models tend to drastically underestimate
+ * the conditional probabilities for rare categories.
+ * 
+ * The labels output from each binary classifier are combined into
+ * a consistent list according to the NELL ontology's hierarchical and mutual-exclusivity
+ * constraints using the 'UnweightedConstrained' inverse-label-indicator 
+ * defined in edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum (just
+ * search that file for 'UnweightedConstrained').
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class TrainGSTBinaryNELLNormalized {
 	private static String experimentName;
 	private static int randomSeed;

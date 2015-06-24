@@ -15,6 +15,13 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 
+/**
+ * NELLUtil gives various methods for interacting with
+ * various NELL components, mappings, ontology, etc.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class NELLUtil {
 	private CatDataTools dataTools;
 	
@@ -61,6 +68,17 @@ public class NELLUtil {
 		return new ArrayList<String>(this.categoryGeneralization.getValues());
 	}
 	
+	/**
+	 * @param nounPhrase
+	 * @param confidenceThreshold
+	 * @return NELL categories for the nounPhrase that have confidence 
+	 * greater than confidenceThreshold according to the 
+	 * NounPhraseNELLCategory gazetteer which was constructed 
+	 * from the flat noun-phrase to category mapping at
+	 * http://rtw.ml.cmu.edu/resources/nps/NELL.ClueWeb09.v1.nps.csv.gz 
+	 * linked from http://rtw.ml.cmu.edu/rtw/nps 
+	 * 
+	 */
 	public List<String> getNounPhraseNELLCategories(String nounPhrase, double confidenceThreshold) {
 		Gazetteer nounPhraseCategory = this.dataTools.getGazetteer("NounPhraseNELLCategory");
 		

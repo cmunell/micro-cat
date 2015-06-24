@@ -29,6 +29,21 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * ConstructAnnotationData constructs separate tsv files
+ * for each NELL category that contain noun-phrase mentions
+ * where the noun-phrase categorization micro-reader disagrees
+ * with the NELL baseline categorization that ignores the
+ * document context. The tsv file for each category is meant to be 
+ * manually annotated with indicators of whether the mentions
+ * actually fall into the category.  This manual annotation 
+ * can be loaded in by 
+ * edu.cmu.ml.rtw.micro.cat.scratch.EvaluateByAnnotationData
+ * to evaluate the micro reading categorization system.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class ConstructAnnotationData {
 	private static String categoriesStr;
 	private static int randomSeed;

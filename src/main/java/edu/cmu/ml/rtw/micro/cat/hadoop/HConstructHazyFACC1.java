@@ -15,6 +15,19 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1Annotation;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1DocumentNLPInMemory;
 
+/**
+ * HConstructHazyFACC1 performs a step in the process
+ * of merging the FACC1 and Hazy data sets.  Namely,
+ * it takes a directory containing the Hazy data and
+ * a directory containing output from HConstructFACC1Type,
+ * and produces a directory of files where each line
+ * has a document name along with the JSON representation
+ * of the corresponding ClueWeb09 document with Hazy
+ * and FACC1 annotations.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class HConstructHazyFACC1 {
 	public static class Mapper extends HRun.PolyMapper<Object, Text, Text, Text> {
 		private Text cluewebDocumentKey = new Text();

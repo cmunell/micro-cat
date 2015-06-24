@@ -33,6 +33,18 @@ import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 
+/**
+ * ConstructCoNLLDocumentSet takes the CoNLL-Yago data from
+ * https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/aida/downloads/,
+ * runs it through the Stanford CoreNLP pipeline,
+ * and then outputs the results as documents in stored
+ * in the micro-reading annotation format (http://rtw.ml.cmu.edu/wiki/index.php/Annotation).
+ * The location of the output of this program is currently given at 
+ * http://rtw.ml.cmu.edu/wiki/index.php/Datasets#List_of_local_datasets
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class ConstructCoNLLYagoDocumentSet {
 	private static CatDataTools dataTools = new CatDataTools();
 	private static PipelineNLPStanford stanfordPipeline;

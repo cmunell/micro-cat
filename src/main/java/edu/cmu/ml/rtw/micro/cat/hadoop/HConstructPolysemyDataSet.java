@@ -15,6 +15,14 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1Annotation;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1DocumentNLPInMemory;
 
+/**
+ * HConstructPolysemyDataSet constructs a data set
+ * of polysemous noun-phrases from the Hazy FACC1 
+ * data set output from HConstructHazyFACC1.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class HConstructPolysemyDataSet {
 	public static class Mapper extends HRun.PolyMapper<Object, Text, Text, Text> {
 		private Text outputKey = new Text();

@@ -16,6 +16,21 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * SupervisedModelEvaluationPolysemy computes the fraction of 
+ * noun-phrases in a data set that a model has labeled with 
+ * a polysemous (mutually-exclusive) set of NELL categories.
+ * 
+ * Parameters:
+ *  computeNELLBaseline - indicates whether the NELL baseline
+ *  labeling (independent of document context) should be evaluated.
+ *  
+ *  NELLConfidenceThreshold - minimum confidence above which the 
+ *  NELL baseline assigns a category to a noun-phrase
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class SupervisedModelEvaluationPolysemy extends SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> {
 	private double NELLConfidenceThreshold;
 	private boolean computeNELLBaseline;

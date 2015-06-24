@@ -10,6 +10,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.apache.hadoop.io.Text;
 
+/**
+ * HConstructFACC1DocumentType performs a step in the process
+ * of merging the FACC1 and Hazy data sets. Namely, it takes
+ * a directory of FACC1 data, and a mapping from freebase
+ * types to topics (constructed from HConstructFreebaseTypeTopic),
+ * and produces a mapping from FACC1 document names to the
+ * Freebase types and topics contained within them.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class HConstructFACC1DocumentType {
 	
 	public static class Mapper extends HRun.PolyMapper<Object, Text, Text, Text> {

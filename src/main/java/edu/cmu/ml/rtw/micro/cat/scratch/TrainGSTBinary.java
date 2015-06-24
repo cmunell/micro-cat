@@ -28,6 +28,29 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.DocumentSetNLPFactory;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * TrainGSTBinary runs the 
+ * edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary
+ * model training/evaluation task on some annotations
+ * of token spans across some document set.
+ * 
+ * ValidationGSTBinary reads in a ctx script (from src/main/resources/contexts/GSTBinary/),
+ * and trains a separate binary classification for each annotation label listed
+ * as a 'validLabel' in the script.   
+ * 
+ * Assuming an 'Areg' model is specified
+ * in the ctx script (this is a wrapper around Anthony Platanios' 'learn'
+ * library AdaGrad logistic regression implementation), each classifier will
+ * be trained by a data set containing at least 20% positive examples.  The ctx
+ * script should also specify a grid-search for the posterior threshold above which
+ * an example is interpreted as 'positive' in order to deal with the biased
+ * sample. This biased sampling + grid-search process is
+ * done because otherwise the logistic regression models tend to drastically underestimate
+ * the conditional probabilities for rare categories.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class TrainGSTBinary {
 	private static String experimentName;
 	private static int randomSeed;

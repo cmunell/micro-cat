@@ -11,6 +11,15 @@ import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluationPrecision;
 
+/**
+ * SupervisedModelEvaluationPolyPrecision computes the same measure
+ * as edu.cmu.ml.rtw.micro.generic.model.evaluation.model.SupervisedModelEvaluationPrecision
+ * but restricted to polysemous noun-phrase datums.
+ * 
+ * @author Bill McDowell
+ *
+ * @param <L>
+ */
 public class SupervisedModelEvaluationPolyPrecision<L> extends SupervisedModelEvaluationPrecision<TokenSpansDatum<L>, L> {
 	public SupervisedModelEvaluationPolyPrecision() {
 		super();

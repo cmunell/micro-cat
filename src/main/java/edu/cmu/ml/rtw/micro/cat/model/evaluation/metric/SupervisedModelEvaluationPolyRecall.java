@@ -11,6 +11,15 @@ import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluationRecall;
 
+/**
+ * SupervisedModelEvaluationPolyRecall computes the same measure
+ * as edu.cmu.ml.rtw.micro.generic.model.evaluation.model.SupervisedModelEvaluationRecall
+ * but restricted to polysemous noun-phrase datums.
+ * 
+ * @author Bill McDowell
+ *
+ * @param <L>
+ */
 public class SupervisedModelEvaluationPolyRecall<L> extends SupervisedModelEvaluationRecall<TokenSpansDatum<L>, L> {
 	public SupervisedModelEvaluationPolyRecall() {
 		super();

@@ -15,6 +15,14 @@ import edu.cmu.ml.rtw.generic.util.Stemmer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * CatDataTools contains definitions of cleaning 
+ * functions, gazetteers, and other tools used by
+ * features in the categorization models.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class CatDataTools extends DataTools {
 	private CatProperties properties;
 	private DocumentSet<DocumentNLP> documentSet;

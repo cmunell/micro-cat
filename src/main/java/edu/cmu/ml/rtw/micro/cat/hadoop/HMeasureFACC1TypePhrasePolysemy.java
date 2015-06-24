@@ -11,8 +11,8 @@ import org.apache.hadoop.io.Text;
 
 /**
  * HMeasureFACC1TypePhrasePolysemy measures the polysemy of noun phrases on the
- * FACC1+Type data as the entropy of the Freebase entity distribution for each
- * noun phrase.
+ * FACC1+Type data output from HConstructFACC1Type as the entropy of the Freebase entity 
+ * distribution for each noun phrase.
  * 
  * @author Bill McDowell
  */

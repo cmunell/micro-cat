@@ -8,6 +8,13 @@ import org.apache.hadoop.io.Text;
 
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 
+/**
+ * Constructs Freebase type to topic mapping from Freebase
+ * RDF dump.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class HConstructFreebaseTypeTopic {
 	public static class Mapper extends HRun.PolyMapper<Object, Text, Text, Text> {
 		private Text freebaseTypeKey = new Text();

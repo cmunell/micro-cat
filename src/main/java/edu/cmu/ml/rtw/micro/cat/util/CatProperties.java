@@ -2,6 +2,14 @@ package edu.cmu.ml.rtw.micro.cat.util;
 
 import edu.cmu.ml.rtw.generic.util.Properties;
 
+/**
+ * CatProperties loads and represents a properties
+ * configuration file (for specifying file paths and
+ * other system dependent information)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class CatProperties extends Properties {
 	private String googleApiKey;
 	private String clueWeb09Facc1DirPath;

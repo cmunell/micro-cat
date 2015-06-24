@@ -3,6 +3,14 @@ package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP.Target;
 
+/**
+ * 
+ * AnnotationTypeNLPCat represents types of annotations that
+ * the micro-cat project can add to NLP documents
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class AnnotationTypeNLPCat {
 	public static final AnnotationTypeNLP<String> NELL_CATEGORY = new AnnotationTypeNLP<String>("nell-cat", String.class, Target.TOKEN_SPAN);
 	public static final AnnotationTypeNLP<String> FREEBASE_TYPE = new AnnotationTypeNLP<String>("freebase-type", String.class, Target.TOKEN_SPAN);

@@ -10,6 +10,14 @@ import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.util.JSONSerializable;
 
+/**
+ * FACC1Annotation represents a freebase type/topic
+ * annotation from the FACC1 data set
+ * (http://lemurproject.org/clueweb09/FACC1/)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class FACC1Annotation implements JSONSerializable {
 	private String phrase;
 	private int startByte; // Phrase start byte in clueweb

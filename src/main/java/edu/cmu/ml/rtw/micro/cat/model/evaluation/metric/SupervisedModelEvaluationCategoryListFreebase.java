@@ -26,6 +26,24 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1DocumentNLPInMemory;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * SupervisedModelEvaluationCategoryListFreebase evaluates an assignment of noun-phrases to
+ * NELL categories against the gold-standard Freebase types (according to the FACC1 data)
+ * using the mapping NELL categories to Freebase types.
+ * 
+ * Parameters:
+ *  computeNELLBaseline - indicates whether the baseline assignment of NELL categories to
+ *  noun-phrases (independent of document context) should be evaluated
+ *  
+ *  NELLConfidenceThreshold - the confidence threshold above which a NELL category within
+ *  a given CategoryList is considered to be assigned to a noun-phrase
+ *  
+ *  evaluation - determines the evaluation metric to compute (F1, precision,
+ *  recall, or accuracy)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> {
 	public enum EvaluationType {
 		F1,

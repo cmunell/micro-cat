@@ -35,7 +35,14 @@ import edu.cmu.ml.rtw.micro.cat.model.evaluation.metric.SupervisedModelEvaluatio
 import edu.cmu.ml.rtw.micro.cat.model.evaluation.metric.SupervisedModelEvaluationPolysemy;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
-
+/**
+ * TokenSpansDatum represents a single data instance consisting
+ * of at least one token span.
+ * 
+ * @author Bill McDowell
+ *
+ * @param <L>
+ */
 public class TokenSpansDatum<L> extends Datum<L> {
 	private TokenSpan[] tokenSpans;
 	private boolean polysemous;

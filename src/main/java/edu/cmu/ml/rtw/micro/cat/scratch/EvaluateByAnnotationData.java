@@ -33,6 +33,19 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * EvaluateByAnnotationData loads in noun-phrase mention data that
+ * has been manually annotated
+ * with indicators of whether each noun-phrase mention falls into each
+ * category. It uses the manual annotations to evaluate the 
+ * noun-phrase categorization micro-reader on each NELL category.
+ * 
+ * (The data would was probably produced by 
+ * ConstructAnnotationData before it was manually annotated.)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class EvaluateByAnnotationData {
 	private static double nellConfidenceThreshold;
 	private static int maxThreads;

@@ -11,6 +11,15 @@ import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluationAccuracy;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 
+/**
+ * SupervisedModelEvaluationPolyAccuracy computes the same measure
+ * as edu.cmu.ml.rtw.micro.generic.model.evaluation.model.SupervisedModelEvaluationAccuracy 
+ * but restricted to polysemous noun-phrase datums.
+ * 
+ * @author Bill McDowell
+ *
+ * @param <L>
+ */
 public class SupervisedModelEvaluationPolyAccuracy<L> extends SupervisedModelEvaluationAccuracy<TokenSpansDatum<L>, L> {
 	public SupervisedModelEvaluationPolyAccuracy() {
 		super();

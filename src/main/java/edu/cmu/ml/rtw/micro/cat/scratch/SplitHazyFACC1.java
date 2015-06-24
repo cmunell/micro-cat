@@ -9,6 +9,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
+/**
+ * SplitHazyFACC1 splits the output of the
+ * HConstructHazyFACC1 Hadoop job into separate 
+ * files.  The output from HConstructHazyFACC1 has
+ * one Hazy/FACC1 annotated ClueWeb document per
+ * line, and SplitHazyFACC1 puts these documents
+ * into separate files.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class SplitHazyFACC1 {
 	public static void main(String[] args) {
 		String inputFilePath = args[0];

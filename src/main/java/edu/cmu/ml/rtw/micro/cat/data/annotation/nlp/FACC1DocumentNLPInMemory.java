@@ -25,6 +25,13 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 
+/**
+ * FACC1DocumentNLPInMemory represents an NLP annotated document
+ * from the FACC1 data set (http://lemurproject.org/clueweb09/FACC1/)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class FACC1DocumentNLPInMemory extends DocumentNLPInMemory {
 	public FACC1DocumentNLPInMemory(CatDataTools dataTools) {
 		super(dataTools);

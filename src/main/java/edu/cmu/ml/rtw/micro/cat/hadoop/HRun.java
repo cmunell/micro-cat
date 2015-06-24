@@ -17,6 +17,15 @@ import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+
+/**
+ * HRun provides some boiler plate that helps simplify
+ * the code in the other Hadoop job classes in 
+ * edu.cmu.ml.rtw.micro.cat.hadoop.
+ * 
+ * @author Bill McDowell
+ *
+ */
 @SuppressWarnings("deprecation")
 public class HRun {
 	public static class PolyMapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> extends Mapper<KEYIN, VALUEIN, KEYOUT, VALUEOUT> {

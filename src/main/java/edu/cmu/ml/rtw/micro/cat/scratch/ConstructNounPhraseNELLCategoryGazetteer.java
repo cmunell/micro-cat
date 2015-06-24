@@ -13,6 +13,16 @@ import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * ConstructNounPhraseNELLCategoryGazetteer converts the
+ * noun-phrase to NELL category mapping from 
+ * http://rtw.ml.cmu.edu/resources/nps/NELL.ClueWeb09.v1.nps.csv.gz
+ * into a format that can be read as a 
+ * edu.cmu.ml.rtw.micro.generic.data.Gazetteer.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class ConstructNounPhraseNELLCategoryGazetteer {
 	public static void main(String[] args) {
 		String inputFilePath = args[0];

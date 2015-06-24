@@ -26,7 +26,33 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * NELLDataSetFactory produces data sets with noun-phrase
+ * mentions that have been labeled with NELL categories
+ * using the edu.cmu.ml.rtw.micro.cat.util.NELLUtil
+ * getNounPhraseNELLCategories method which assigns
+ * categories to a noun phrase without looking at its
+ * context. 
+ * 
+ * You can get a sense of the behavior of each of the methods
+ * in this class by looking at how 
+ * NELLDataSetFactory.MentionDataSetCollection uses them, and 
+ * reading its documentation.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class NELLDataSetFactory {
+	/**
+	 * Represents a collection of different kinds of data sets
+	 * to be used when training and evaluating noun-phrase 
+	 * NELL categorization models.  This is mainly used
+	 * by edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinaryNELLNormalized
+	 * to construct a bunch of data sets.
+	 * 
+	 * @author Bill McDowell
+	 *
+	 */
 	public static class MentionDataSetCollection {
 		private DataSet<TokenSpansDatum<CategoryList>, CategoryList> lowConfidenceTestData;
 		private DataSet<TokenSpansDatum<CategoryList>, CategoryList> noBeliefTestData; 
@@ -38,6 +64,47 @@ public class NELLDataSetFactory {
 		private TokenSpansDatum.Tools<CategoryList> datumTools;
 		private CategoryList categories;
 		
+		/**
+		 * 
+		 * @param datumTools
+		 * @param categories
+		 * @param documentSetName names the document set from which to construct the data
+		 * 
+		 * @param nellConfidenceThreshold confidence threshold above which a category
+		 * is assigned to a noun phrase
+		 * 
+		 * @param lowConfidenceTestExamples number of noun-phrase examples in 
+		 * the set of data where the noun-phrase to category mapping 
+		 * does not have a NELL category beliefs with greater than nellConfidenceThreshold
+		 * confidence, but it does have a NELL category beliefs with less than that
+		 * confidence
+		 * 
+		 * @param noBeliefTestExamples number of noun-phrase examples in
+		 * the set of data where the noun-phrase to category mapping 
+		 * does not have NELL category beliefs about the noun-phrases
+		 * 
+		 * @param polysemousTestExamples number of noun-phrase examples in
+		 * the set of data where the noun-phrase to category mapping has
+		 * more than one NELL category belief with greater than nellConfidenceThreshold
+		 * confidence for each noun-phrase
+		 * 
+		 * @param nonPolysemousDataSetName is the name to give the data set
+		 * where each noun-phrase example has exactly one NELL category with
+		 * greater than nellConfidenceThreshold confidence per noun-phrase 
+		 * (this is usually what's used for training data)
+		 * 
+		 * @param nonPolysemousExamplesPerLabel is the number of examples
+		 * for each NELL category that must be constructed in the 
+		 * non-polysemous data set.  There may be more than this minimum number
+		 * of examples for each category if the category co-occurs on noun-phrases
+		 * which act as examples for other categories.  There may be 
+		 * fewer than this minimum number of examples if the source document
+		 * set contains fewer than the minimum across the entire set.  The
+		 * nonPolysemousExamplesPerLabel simply says when the non-polysmemous
+		 * data set construction method is allowed to stop collecting examples
+		 * of each NELL category.
+		 * 
+		 */
 		public MentionDataSetCollection(
 				TokenSpansDatum.Tools<CategoryList> datumTools,
 				CategoryList categories,
@@ -181,30 +248,71 @@ public class NELLDataSetFactory {
 			}
 		}
 		
+		/**
+		 * @return a data set containing noun-phrase mention examples for which the noun-phrase
+		 * to NELL category mapping has only NELL category beliefs with confidence greater than
+		 * the threshold (which was given on construction of this object)
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getLowConfidenceTestData() {
 			return this.lowConfidenceTestData;
 		}
 		
+		/**
+		 * @return a data set containing noun-phrase mention examples for which the noun-phrase
+		 * to NELL category mapping has no NELL category beliefs
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getNoBeliefTestData() {
 			return this.noBeliefTestData;
 		}
 		
+		/**
+		 * @return a data set containing noun-phrase mention examples for which the noun-phrase
+		 * to NELL category mapping has more than one NELL category belief with confidence greater than
+		 * the threshold (which was given on construction of this object)
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getPolysemousTestData() {
 			return this.polysemousTestData;
 		}
 		
+		/**
+		 * @return a training data set containing noun-phrase mention examples for which the noun-phrase
+		 * to NELL category mapping has a single NELL category belief with confidence greater than
+		 * the threshold (which was given on construction of this object).  This data has a skewed NELL 
+		 * category distribution since it is constructed in a way that tries to ensure that each 
+		 * category has a minimum number of positive training examples.
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getNonPolysemousTrainData() {
 			return this.nonPolysemousTrainData;
 		}
 		
+		/**
+		 * @return a testing data set containing noun-phrase mention examples for which the noun-phrase
+		 * to NELL category mapping has a single NELL category belief with confidence greater than
+		 * the threshold (which was given on construction of this object). This data has a skewed NELL 
+		 * category distribution since it is constructed in a way that tries to ensure that each 
+		 * category has a minimum number of positive training examples. (This data was constructed
+		 * in the same was as the data returned by getNonPolysemousTrainData, but is 1/9 the size)
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getNonPolysemousTestData() {
 			return this.nonPolysemousTestData;
 		}
 		
+		/**
+		 * @return a dev data set that is non-polysemous in the same way as the data returned by
+		 * getNonPolysemousTrainData and getNonPolysemousTrainData, but whose NELL category distribution
+		 * is not skewed since the data is randomly sampled instead of sampled in a way that ensures
+		 * a minimum number of positive examples for each category.
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getDevData() {
 			return this.devData;
 		}
 		
+		/**
+		 * @return a test data set that is non-polysemous in the same way as the data returned by
+		 * getNonPolysemousTrainData and getNonPolysemousTrainData, but whose NELL category distribution
+		 * is not skewed since the data is randomly sampled instead of sampled in a way that ensures
+		 * a minimum number of positive examples for each category.
+		 */
 		public DataSet<TokenSpansDatum<CategoryList>, CategoryList> getTestData() {
 			return this.testData;
 		}

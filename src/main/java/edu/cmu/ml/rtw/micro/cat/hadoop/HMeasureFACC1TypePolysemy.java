@@ -15,7 +15,8 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 
 
 /**
- * HMeasureFACC1TypePolysemy computes the weighted average polysemy across
+ * HMeasureFACC1TypePolysemy takes output from HMeasureFACC1TypePhrasePolysemy, 
+ * and computes the weighted average polysemy across
  * phrases for each pair of types assuming each entity is either that type or not.  
  * This is the conditional entropy of entity distribution
  * given noun phrase.

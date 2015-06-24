@@ -12,6 +12,15 @@ import java.util.Map.Entry;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * ConstructNELLCategoryGazetteers takes the NELL ontology from
+ * http://rtw.ml.cmu.edu/resources/results/08m/NELL.08m.930.ontology.csv.gz
+ * and converts it into gazetteers that map categories to their
+ * generalizations and mutual exclusions.
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class ConstructNELLCategoryGazetteers {
 	public static void main(String[] args) {
 		String inputFilePath = args[0];

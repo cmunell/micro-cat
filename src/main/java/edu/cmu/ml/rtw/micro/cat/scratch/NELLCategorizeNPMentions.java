@@ -35,6 +35,14 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
+/**
+ * NELLCategorizeNPMentions is a command-line version 
+ * of the noun-phrase mention categorization micro-reader 
+ * (edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.NELLMentionCategorizer)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class NELLCategorizeNPMentions {
 	public enum InputType {
 		PLAIN_TEXT,

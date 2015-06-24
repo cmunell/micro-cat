@@ -13,6 +13,15 @@ import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.util.NELLUtil;
 
+/**
+ * CategoryList represents a (possibly weighted)
+ * list of categories (typically used as a label
+ * for a noun-phrase or some other piece of 
+ * text)
+ * 
+ * @author Bill McDowell
+ *
+ */
 public class CategoryList {
 	public enum Type {
 		ALL_NELL_CATEGORIES,
