@@ -48,8 +48,8 @@ into a single NLP annotated data set with noun-phrases labeled
  with their Freebase topics and types.  This merging is done
  by a sequence of Hadoop tasks each of which is run through
  the *edu.cmu.ml.rtw.micro.cat.hadoop.HRun* wrapper. The sequence
- is: *HConstructFreebaseTypeTopic* > *HConstructFACC1DocumentType* 
- > *HConstructFACC1Type* > *HConstructHazyFACC1*.
+ is: *HConstructFreebaseTypeTopic* > *HConstructFACC1DocumentType* > 
+ *HConstructFACC1Type* > *HConstructHazyFACC1*.
 There are script templates for running each of these steps in 
 *src/main/resources/hadoop/scripts*.  You can find additional documentation
 for each step in its source code file.
