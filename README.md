@@ -125,7 +125,7 @@ then you can copy all the **.model.out* files to
 on the rtw machines, and redeploy the *micro-cat-data* project.
 
 There's additional documentation for how the training/evaluation process works
-at the top of the **edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinaryNELLNormalized*
+at the top of the *edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinaryNELLNormalized*
 source file.
 
 If all else fails, this is already set up for training in 
@@ -134,8 +134,32 @@ using the script at */home/wmcdowel/NELL/micro/Jobs/trainGSTBinaryNELLNormalized
  
 ## Training other mention classifiers ##
 
+You can train additional classifiers on labeled token spans using the 
+*edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinary*.  First, set up
+your *cat.properties* configuration file as described in the previous 
+section (except that you don't need to fill in the path to the HazyFACC1 data set).
+Next, create train, dev, and test document sets in the NELL micro-reading
+annotation format, and add them to 
+*edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.DocumentSetNLPFactory*.  These
+document sets should have mention token spans labeled with some annotation
+for which you want to train classifiers.  Declare a constant for this
+custom annotation type in *edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat*,
+and add an instance of this annotation type to 
+*edu.cmu.ml.rtw.micro.cat.data.CatDataTools*. Then, you can train and
+evaluate classifiers by doing something like:
 
-		
+    cd [top-level directory of micro-cat]
+    mvn clean compile -U
+    mvn exec:java -Dexec.mainClass="edu.cmu.ml.rtw.micro.cat.scratch.TrainGSTBinary" -Dexec.args="--experimentName=[name of ctx script file]  --trainDocumentSetName=[train set] --devDocumentSetName=[dev set] --testDocumentSetName=[test set] --categoryType=[label annotation type]
+
+Your ctx script file should be in *src/main/resources/contexts/GSTBinary*.  
+The training, dev, and test sets should be the names of document sets declared as constants 
+in *DocumentSetNLPFactory*.  The *categoryType* should be the string
+name of the annotation type used for labels in the document sets.  See
+*/home/wmcdowel/NELL/micro/Jobs/trainGSTBinary.sh* on the rtw machines 
+for an example of how this is set up
+to train Freebase type noun-phrase classifiers on the the CoNLL-YAGO data.
+
 ## Running the noun-phrase categorizer ##
 
 *edu.cmu.ml.rtw.micro.cat.scratch.NELLCategorizeNPMentions* provides
