@@ -30,8 +30,8 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
  * Hazy-FACC1 data set (constructed from ClueWeb09 using 
  * edu.cmu.ml.rtw.micro.cat.hadoop.HConstructHazyFACC1) that
  * has noun-phrases labeled with their NELL categories.  The
- * training data only consists of noun-phrases where NELL only
- * has one set of consistent category beliefs above 'nellConfidenceThreshold'
+ * training data only consists of noun-phrases where NELL has a
+ * single set of consistent category beliefs above 'nellConfidenceThreshold'
  * confidence (so NELL believes the noun-phrase is non-polysemous). 
  * The training data is also constructed such that there will be
  * at least 'nonPolysemousExamplesPerLabel' noun-phrase mentions
