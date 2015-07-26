@@ -279,6 +279,9 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 		// This part is single threaded to maintain determinism
 		List<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>> binaryModels = new ArrayList<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>>();
 		for (String category : this.validCategories.getCategories()) {
+			if (!binaryModelMap.containsKey(category))
+				continue;
+			
 			binaryModels.add(binaryModelMap.get(category));
 			
 			LabelIndicator<CategoryList> labelIndicator = new LabelIndicator<CategoryList>() {
