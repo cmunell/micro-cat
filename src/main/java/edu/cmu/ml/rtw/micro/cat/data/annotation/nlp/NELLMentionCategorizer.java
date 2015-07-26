@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,6 +27,7 @@ import edu.cmu.ml.rtw.generic.model.SupervisedModelCompositeBinary;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
+import edu.cmu.ml.rtw.generic.util.ThreadMapper;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.CategoryList;
@@ -230,70 +232,81 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			return true;
 		}
 		
-		List<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>> binaryModels = new ArrayList<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>>();
 		this.features = new ArrayList<Feature<TokenSpansDatum<CategoryList>, CategoryList>>();
 		List<LabelIndicator<CategoryList>> labelIndicators = new ArrayList<LabelIndicator<CategoryList>>();
 		
-		try {
-			dataTools.getOutputWriter().debugWriteln("Deserializing features...");
-			
-			BufferedReader featureReader = FileUtil.getFileReader(featuresFile.getPath());
-			Context<TokenSpansDatum<CategoryList>, CategoryList> featureContext = Context.deserialize(this.context.getDatumTools(), featureReader);
-			featureReader.close();
-			this.features = featureContext.getFeatures();
+		dataTools.getOutputWriter().debugWriteln("Deserializing features...");
+		
+		BufferedReader featureReader = FileUtil.getFileReader(featuresFile.getPath());
+		Context<TokenSpansDatum<CategoryList>, CategoryList> featureContext = Context.deserialize(this.context.getDatumTools(), featureReader);
+		try { featureReader.close(); } catch (IOException e1) { return false; }
+		this.features = featureContext.getFeatures();
 
-			Context<TokenSpansDatum<Boolean>, Boolean> binaryContext = featureContext.makeBinary(TokenSpansDatum.getBooleanTools(this.context.getDatumTools().getDataTools()), null);
-			
-			dataTools.getOutputWriter().debugWriteln("Finished deserializing " + this.features.size() + " features.");
-			
-			for (final String category : this.validCategories.getCategories()) {
+		Context<TokenSpansDatum<Boolean>, Boolean> binaryContext = featureContext.makeBinary(TokenSpansDatum.getBooleanTools(this.context.getDatumTools().getDataTools()), null);
+		
+		dataTools.getOutputWriter().debugWriteln("Finished deserializing " + this.features.size() + " features.");
+		
+		Map<String, SupervisedModel<TokenSpansDatum<Boolean>, Boolean>> binaryModelMap = new HashMap<String, SupervisedModel<TokenSpansDatum<Boolean>, Boolean>>();
+		ThreadMapper<String, Boolean> threads = new ThreadMapper<String, Boolean>(new ThreadMapper.Fn<String, Boolean>() {
+			public Boolean apply(String category) {
 				File modelFile = new File(modelFilePathPrefix + category);
 				if (FileUtil.fileExists(modelFile.getPath())) {
 					dataTools.getOutputWriter().debugWriteln("Deserializing " + category + " model at " + modelFile.getPath());
 					BufferedReader modelReader = FileUtil.getFileReader(modelFile.getPath());
 					
 					Context<TokenSpansDatum<Boolean>, Boolean> modelContext = Context.deserialize(binaryContext.getDatumTools(), modelReader);
-					modelReader.close();
+					try { modelReader.close(); } catch (IOException e) { return false; }
 					
 					if (modelContext == null || modelContext.getModels().size() == 0) {
 						dataTools.getOutputWriter().debugWriteln("WARNING: Failed to deserialize " + category + " model.  Maybe empty?");	
-						continue;
+						return true;
 					}
 					
-					binaryModels.add(modelContext.getModels().get(0));
-					
-					LabelIndicator<CategoryList> labelIndicator = new LabelIndicator<CategoryList>() {
-						@Override
-						public String toString() {
-							return category;
-						}
-						
-						@Override
-						public boolean indicator(CategoryList categories) {
-							if (categories == null)
-								return true;
-							return categories.contains(category);
-						}
-	
-						@Override
-						public double weight(CategoryList categories) {
-							return categories.getCategoryWeight(category);
-						}	
-					};
-					
-					this.context.getDatumTools().addLabelIndicator(labelIndicator);
-					labelIndicators.add(labelIndicator);
+					synchronized (NELLMentionCategorizer.this) {
+						binaryModelMap.put(category, modelContext.getModels().get(0));
+					}
 				}
-			
+		
+				return true;
 			}
+		});
+
+		List<Boolean> results = threads.run(Arrays.asList(this.validCategories.getCategories()), this.maxThreads);
+		for (Boolean result : results)
+			if (!result)
+				return false;
+		
+		// This part is single threaded to maintain determinism
+		List<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>> binaryModels = new ArrayList<SupervisedModel<TokenSpansDatum<Boolean>, Boolean>>();
+		for (String category : this.validCategories.getCategories()) {
+			binaryModels.add(binaryModelMap.get(category));
 			
-			this.model = new SupervisedModelCompositeBinary<TokenSpansDatum<Boolean>, TokenSpansDatum<CategoryList>, CategoryList>(binaryModels, labelIndicators, binaryContext, inverseLabelIndicator);
-			dataTools.getOutputWriter().debugWriteln("Finished deserializing models.");
-			return true;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
+			LabelIndicator<CategoryList> labelIndicator = new LabelIndicator<CategoryList>() {
+				@Override
+				public String toString() {
+					return category;
+				}
+				
+				@Override
+				public boolean indicator(CategoryList categories) {
+					if (categories == null)
+						return true;
+					return categories.contains(category);
+				}
+
+				@Override
+				public double weight(CategoryList categories) {
+					return categories.getCategoryWeight(category);
+				}	
+			};
+			
+			NELLMentionCategorizer.this.context.getDatumTools().addLabelIndicator(labelIndicator);
+			labelIndicators.add(labelIndicator);	
 		}
+		
+		this.model = new SupervisedModelCompositeBinary<TokenSpansDatum<Boolean>, TokenSpansDatum<CategoryList>, CategoryList>(binaryModels, labelIndicators, binaryContext, inverseLabelIndicator);
+		dataTools.getOutputWriter().debugWriteln("Finished deserializing models.");
+		return true;
 	}
 
 	public DataSet<TokenSpansDatum<CategoryList>, CategoryList> categorizeNounPhraseMentions(DataSet<TokenSpansDatum<CategoryList>, CategoryList> data) {
