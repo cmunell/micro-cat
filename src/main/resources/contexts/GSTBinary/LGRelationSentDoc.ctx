@@ -585,7 +585,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -596,7 +596,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -607,7 +607,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -618,7 +618,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -629,7 +629,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -640,7 +640,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -651,7 +651,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -662,7 +662,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -673,7 +673,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -684,7 +684,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -695,7 +695,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -706,7 +706,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
@@ -717,7 +717,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -728,7 +728,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -739,7 +739,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
@@ -750,7 +750,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -761,7 +761,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -772,7 +772,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fcorefr3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
@@ -783,7 +783,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -794,7 +794,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -805,7 +805,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -816,7 +816,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -827,7 +827,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -838,7 +838,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -849,7 +849,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent1";
@@ -860,7 +860,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
@@ -871,7 +871,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${sent3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent3";
@@ -882,7 +882,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -893,7 +893,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -904,7 +904,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
@@ -915,7 +915,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -926,7 +926,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -937,7 +937,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
@@ -948,7 +948,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r1}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc1}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc1";
@@ -959,7 +959,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r2}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc2}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc2";
@@ -970,7 +970,7 @@ rs rules=RuleSet() {
 								vocabFeature=${fsent1r3}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
-								vocabFIlterInitArg=${SRC_TERM},
+								vocabFilterInitArg=${SRC_TERM},
 								fn=(${strStem} o ${doc3}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfdoc3";
