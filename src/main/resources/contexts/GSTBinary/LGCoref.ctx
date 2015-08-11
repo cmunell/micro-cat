@@ -1,0 +1,781 @@
+value randomSeed="1";
+value maxThreads="33";
+value trainOnDev="false";
+value errorExampleExtractor="FirstTokenSpan";
+array validLabels=(
+"/education/field_of_study","/aviation/airport","/biology/animal","/architecture/architect","/medicine/artery",
+"/spaceflight/astronaut","/sports/pro_athlete","/travel/tourist_attraction","/automotive/engine",
+"/automotive/company","/automotive/model","/sports/sports_championship","/en/beach","/food/beverage",
+"/internet/blog","/games/game","/medicine/anatomical_structure","/medicine/bone","/book/book",
+"/medicine/brain_structure","/transportation/bridge","/architecture/building",
+"/architecture/lighthouse_construction_material",
+"/celebrities/celebrity","/food/cheese","/dining/chef","/chemistry/chemical_compound","/location/citytown",
+"/fashion/garment","/visual_art/color","/business/business_operation","/conferences/conference_series",
+"/location/continent","/location/country","/location/us_county","/finance/currency","/type/datetime",
+"/time/day_of_week","/medicine/disease","/medicine/drug","/business/industry","/government/election",
+"/people/ethnicity","/time/event","/film/film_festival","/food/food","/government/government_agency",
+"/interests/hobby","/medicine/hospital","/travel/accommodation","/geography/island","/geography/lake",
+"/geography/geographical_feature","/language/human_language","/location/geocode","/location/location",
+"/book/magazine","/medicine/medical_treatment","/military/military_conflict","/royalty/monarch",
+"/time/month","/protected_sites/protected_site","/geography/mountain","/geography/mountain_range",
+"/film/film","/medicine/muscle","/architecture/museum","/music/album","/music/artist","/music/festival",
+"/music/genre","/music/group_member","/music/instrument","/music/composition","/medicine/nerve",
+"/book/newspaper","/organization/non_profit_organization","/organization/organization",
+"/protected_sites/protected_site",
+"/people/person","/en/african_people","/en/asian","/en/australian_people","/m/044038p","/m/043_yvy",
+"/m/05z14zp","/religion/place_of_worship","/book/poem","/government/government_office_or_title",
+"/government/political_party","/government/politician","/en/port",
+"/people/profession","/computer/programming_language",
+"/biology/protein","/broadcast/radio_station","/food/recipe","/music/record_label","/religion/religion",
+"/dining/restaurant","/geography/river","/education/educational_institution","/business/shopping_center",
+"/architecture/skyscraper","/sports/sport","/sports/sports_equipment","/sports/sports_league",
+"/sports/sports_team","/sports/sports_facility","/tv/tv_network","/tv/tv_program","/broadcast/tv_station",
+"/base/terrorism/terrorist_organization","/business/trade_union","/games/game","/en/train_station",
+"/travel/transportation_mode","/education/university","/medicine/vein","/cvg/computer_videogame",
+"/cvg/cvg_platform","/visual_art/visual_art_form","/visual_art/visual_artist",
+"/visual_art/art_period_movement","/internet/website","/wine/wine_type","/wine/wine_producer","/book/author"
+);
+
+evaluation accuracy=Accuracy();
+evaluation accuracyBase=Accuracy(computeBaseline="true");
+evaluation f.5=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="0.5");
+evaluation f1=F(mode="MACRO_WEIGHTED", filterLabel="true", Beta="1");
+evaluation prec=Precision(weighted="false", filterLabel="true");
+evaluation recall=Recall(weighted="false", filterLabel="true");
+
+ts_fn head=Head();
+ts_fn ins1=NGramInside(n="1", noHead="true");
+ts_fn ins2=NGramInside(n="2", noHead="true");
+ts_fn ins3=NGramInside(n="3", noHead="true");
+ts_fn ctxb1=NGramContext(n="1", type="BEFORE");
+ts_fn ctxa1=NGramContext(n="1", type="AFTER");
+ts_fn ctxb2=NGramContext(n="2", type="BEFORE");
+ts_fn ctxa2=NGramContext(n="2", type="AFTER");
+ts_fn ctxb3=NGramContext(n="3", type="BEFORE");
+ts_fn ctxa3=NGramContext(n="3", type="AFTER");
+ts_fn sent1=NGramSentence(n="1", noSpan="true");
+ts_fn sent2=NGramSentence(n="2", noSpan="true");
+ts_fn sent3=NGramSentence(n="3", noSpan="true");
+ts_fn doc1=NGramDocument(n="1", noSentence="true");
+ts_fn doc2=NGramDocument(n="2", noSentence="true");
+ts_fn doc3=NGramDocument(n="3", noSentence="true");
+ts_fn doc1full=NGramDocument(n="1", noSentence="false");
+ts_fn doc2full=NGramDocument(n="2", noSentence="false");
+ts_fn doc3full=NGramDocument(n="3", noSentence="false");
+ts_fn sent1full=NGramSentence(n="1", noSpan="false");
+ts_fn sent2full=NGramSentence(n="2", noSpan="false");
+ts_fn sent3full=NGramSentence(n="3", noSpan="false");
+ts_fn coref=Coref();
+ts_str_fn pos=PoS();
+ts_str_fn str=String(splitTokens="false");
+ts_str_fn strDef=String(cleanFn="CatDefaultCleanFn");
+ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
+ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
+ts_str_fn corefr=RelationStr(f1=${strStem}, f2=(${strStem} o ${coref}), relationSymbol="-/-");
+str_fn pre=Affix(nMin="3", nMax="5", type="PREFIX"); 
+str_fn suf=Affix(nMin="3", nMax="5", type="SUFFIX"); 
+str_fn gaz=Gazetteer(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9");
+str_fn split1=Split(chunkSize="1");
+str_fn split2=Split(chunkSize="2");
+str_fn split3=Split(chunkSize="3");
+str_fn stem=Clean(cleanFn="CatStemCleanFn");
+
+feature fdep=NGramDep(scale="INDICATOR", mode="ParentsAndChildren", useRelationTypes="true", minFeatureOccurrence="2", n="1", cleanFn="CatStemCleanFn", tokenExtractor="AllTokenSpans");
+feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
+feature ftcnt=TokenCount(maxCount="5", tokenExtractor="AllTokenSpans");
+feature fform=StringForm(stringExtractor="FirstTokenSpan", minFeatureOccurrence="2");
+
+feature fgnp=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str}));
+feature fgnps1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${sent1}));
+feature fgnps2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${sent2}));
+feature fgnps3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${sent3}));
+feature fgnpd1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${doc1}));
+feature fgnpd2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${doc2}));
+feature fgnpd3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${doc3}));
+
+feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
+feature fphrh1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
+feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
+feature fphr2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins2}));
+feature fphr3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins3}));
+
+feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${ins1}));
+feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${ins1}));
+feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${head}));
+feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${head}));
+
+feature fposb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb1}));
+feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa1}));
+feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxb1}));
+feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxa1}));
+
+(ignored) feature fsent1=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${sent1}));
+(ignored) feature fsent2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${sent2}));
+(ignored) feature fsent3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${sent3}));
+(ignored) feature fdoc1=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${doc1}));
+(ignored) feature fdoc2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${doc2}));
+(ignored) feature fdoc3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${doc3}));
+(ignored) feature fctxb2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxb2}));
+(ignored) feature fctxb3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxb3}));
+(ignored) feature fctxa2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxa2}));
+(ignored) feature fctxa3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxa3}));
+(ignored) feature fposb2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb2}));
+(ignored) feature fposb3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb3}));
+(ignored) feature fposa2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa2}));
+(ignored) feature fposa3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa3}));
+(ignored) feature fcorefr1=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=(${corefr} o ${sent1full}));
+(ignored) feature fcorefr2=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=(${corefr} o ${sent2full}));
+(ignored) feature fcorefr3=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=(${corefr} o ${sent3full}));
+
+rs rules=RuleSet() {
+	rule gnpSent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnpSent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnpSent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});	
+
+	rule gnps1Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnps1Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnps1Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});	
+
+	rule gnps2Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnps2Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnps2Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});	
+
+	rule gnps3Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnps3Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnps3Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});
+
+	rule gnpd1Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnpd1Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnpd1Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});	
+
+	rule gnpd2Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnpd2Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnpd2Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});	
+
+	rule gnpd3Sent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+	
+	rule gnpd3Sent2 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});						
+
+	rule gnpd3Sent3 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent3},
+								vocabFilterFn=(${stem} o GazetteerFilter(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9", idFilter=${SRC_TERM})),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent3}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							});
+
+	rule sent2sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+
+	rule sent3sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent1},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							});
+
+	rule sent3sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fsent2},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${sent2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							});
+
+	rule sentDoc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc1}, 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
+								vocabFilterInit="FULL", 
+								fn=(${strStem} o ${doc1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc1";
+								});
+	
+	rule sentDoc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc2}, 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
+								vocabFilterInit="FULL", 
+								fn=(${strStem} o ${doc2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc2";
+								});
+
+	rule sentDoc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc3}, 
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity()) o ${stem}), 
+								vocabFilterInit="FULL", 
+								fn=(${strStem} o ${doc3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc3";
+								});
+
+	rule doc2doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc1},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc1";
+							});
+
+	rule doc3doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc1},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=1)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc1}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc1";
+							});
+
+	rule doc3doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fdoc2},
+								vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Split(chunkSize=2)) o ${stem}),
+								vocabFilterInit="FULL",
+								fn=(${strStem} o ${doc2}),
+								tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfdoc2";
+							});
+
+	rule phrhSent = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
+					-> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fsent1},
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
+							vocabFilterInit="FULL",
+							fn=(${strStem} o ${sent1}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							}
+						);
+						
+	rule phrSent1 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
+					-> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fsent1},
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
+							vocabFilterInit="FULL",
+							fn=(${strStem} o ${sent1}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent1";
+							}
+						);
+						
+	rule phrSent2 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins2})))
+					-> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fsent2},
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
+							vocabFilterInit="FULL",
+							fn=(${strStem} o ${sent2}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent2";
+							}
+						);
+						
+	rule phrSent3 = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins3})))
+					-> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fsent3},
+							vocabFilterFn=(Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=${stem}) o ${stem}),
+							vocabFilterInit="FULL",
+							fn=(${strStem} o ${sent3}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfsent3";
+							}
+						);
+	
+	rule posb1posb2 = (TokenSpanFnDataVocab(fn=(${pos} o ${ctxb1})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fposb2},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="SUFFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${pos} o ${ctxb2}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfposb2";
+							}
+					  );	
+					  
+	rule posb2posb3 = (TokenSpanFnFilteredVocab(fn=(${pos} o ${ctxb2})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fposb3},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="SUFFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${pos} o ${ctxb3}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfposb3";
+							}
+					  );
+	
+	rule ctxb1ctxb2 = (TokenSpanFnDataVocab(fn=(${strStem} o ${ctxb1})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fctxb2},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="SUFFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${strStem} o ${ctxb2}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfctxb2";
+							}
+					  );
+					  
+	rule ctxb2ctxb3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${ctxb2})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fctxb3},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="SUFFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${strStem} o ${ctxb3}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfctxb3";
+							}
+					  );
+
+	rule posa1posa2 = (TokenSpanFnDataVocab(fn=(${pos} o ${ctxa1})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fposa2},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="PREFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${pos} o ${ctxa2}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfposa2";
+							}
+					  );	
+					  
+	rule posa2posa3 = (TokenSpanFnFilteredVocab(fn=(${pos} o ${ctxa2})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fposa3},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="PREFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${pos} o ${ctxa3}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfposa3";
+							}
+					  );
+	
+	rule ctxa1ctxa2 = (TokenSpanFnDataVocab(fn=(${strStem} o ${ctxa1})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fctxa2},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="PREFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${strStem} o ${ctxa2}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfctxa2";
+							}
+					  );
+					  
+	rule ctxa2ctxa3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${ctxa2})))
+					  -> (TokenSpanFnFilteredVocab(
+							vocabFeature=${fctxa3},
+							vocabFilterFn=Identity(),
+							vocabFilterInit="PREFIX",
+							vocabFilterInitArg=${SRC_TERM},
+							fn=(${strStem} o ${ctxa3}),
+							tokenExtractor="AllTokenSpans") {
+								value referenceName = "rfctxa3";
+							}
+					  ); 
+
+	rule sentCorefr1Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent1";
+								});
+								
+	rule sentCorefr1Sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent2";
+								});
+							
+	rule sentCorefr1Sent3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent3";
+								});
+
+	rule sentCorefr2Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent1";
+								});
+								
+	rule sentCorefr2Sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent2";
+								});
+							
+	rule sentCorefr2Sent3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent3";
+								});
+
+	rule sentCorefr3Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr3}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent1";
+								});
+								
+	rule sentCorefr3Sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent2";
+								});
+							
+	rule sentCorefr3Sent3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr3}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${sent3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfsent3";
+								});
+
+	rule docCorefr1Doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc1";
+								});
+								
+	rule docCorefr1Doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc2";
+								});
+							
+	rule docCorefr1Doc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc1})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr1}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc3";
+								});
+
+	rule docCorefr2Doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc1";
+								});
+								
+	rule docCorefr2Doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc2";
+								});
+							
+	rule docCorefr2Doc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc3";
+								});
+
+	rule docCorefr3Doc1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr3}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc1}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc1";
+								});
+								
+	rule docCorefr3Doc2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc2})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr2}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc2}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc2";
+								});
+							
+	rule docCorefr3Doc3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${doc3})))
+						-> (TokenSpanFnFilteredVocab(
+								vocabFeature=${fcorefr3}, 
+								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
+								vocabFilterInit="PREFIX", 
+								vocabFilterInitArg=${SRC_TERM},
+								fn=(${strStem} o ${doc3}), 
+								tokenExtractor="AllTokenSpans") {
+									value referenceName = "rfdoc3";
+								});
+};
+
+model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
+{
+	array validLabels=${validLabels};
+};
+
+gs g=GridSearch() {
+	dimension l2=Dimension(name="l2", values=(.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1,1,10), trainingDimension="true");
+	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
+
+	model model=${lg};
+	evaluation evaluation=${accuracy};
+};
