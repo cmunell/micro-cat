@@ -125,10 +125,10 @@ feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 (ignored) feature fposb3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb3}));
 (ignored) feature fposa2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa2}));
 (ignored) feature fposa3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa3}));
-(ignored) feature fcorefr11=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent1full}));
-(ignored) feature fcorefr21=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent2full}));
-(ignored) feature fcorefr12=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent1full}));
-(ignored) feature fcorefr22=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent2full}));
+(ignored) feature fcorefr11=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent1full}));
+(ignored) feature fcorefr21=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent2full}));
+(ignored) feature fcorefr12=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent1full}));
+(ignored) feature fcorefr22=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent2full}));
 
 rs rules=RuleSet() {
 	rule gnpSent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
