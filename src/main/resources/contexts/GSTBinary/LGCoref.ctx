@@ -65,13 +65,15 @@ ts_fn doc3full=NGramDocument(n="3", noSentence="false");
 ts_fn sent1full=NGramSentence(n="1", noSpan="false");
 ts_fn sent2full=NGramSentence(n="2", noSpan="false");
 ts_fn sent3full=NGramSentence(n="3", noSpan="false");
-ts_fn coref=Coref();
+ts_fn coref1=Coref(spanMinLength="1", spanMaxLength="1");
+ts_fn coref2=Coref(spanMinLength="2", spanMaxLength="2");
 ts_str_fn pos=PoS();
 ts_str_fn str=String(splitTokens="false");
 ts_str_fn strDef=String(cleanFn="CatDefaultCleanFn");
 ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
 ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
-ts_str_fn corefr=RelationStr(f1=${strStem}, f2=(${strStem} o ${coref}), relationSymbol="-/-");
+ts_str_fn corefr1=RelationStr(f1=${strStem}, f2=(${strStem} o ${coref1}), relationSymbol="-/-");
+ts_str_fn corefr2=RelationStr(f1=${strStem}, f2=(${strStem} o ${coref2}), relationSymbol="-/-");
 str_fn pre=Affix(nMin="3", nMax="5", type="PREFIX"); 
 str_fn suf=Affix(nMin="3", nMax="5", type="SUFFIX"); 
 str_fn gaz=Gazetteer(gazetteer="NounPhraseNELLCategory", weightThreshold="0.9");
@@ -123,8 +125,10 @@ feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 (ignored) feature fposb3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb3}));
 (ignored) feature fposa2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa2}));
 (ignored) feature fposa3=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa3}));
-(ignored) feature fcorefr1=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=(${corefr} o ${sent1full}));
-(ignored) feature fcorefr2=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DOCUMENT", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=(${corefr} o ${sent2full}));
+(ignored) feature fcorefr11=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent1full}));
+(ignored) feature fcorefr21=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr1} o ${sent2full}));
+(ignored) feature fcorefr12=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent1full}));
+(ignored) feature fcorefr22=TokenSpanFnDataVocabTrie(scale="INDICATOR", initMode="BY_DATUM", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${corefr2} o ${sent2full}));
 
 rs rules=RuleSet() {
 	rule gnpSent1 = (TokenSpanFnDataVocab(fn=(${gaz} o ${str})))
@@ -569,7 +573,7 @@ rs rules=RuleSet() {
 
 	rule sentCorefr1Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr1}, 
+								vocabFeature=${fcorefr11}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
 								vocabFilterInitArg=${SRC_TERM},
@@ -580,7 +584,7 @@ rs rules=RuleSet() {
 								
 	rule sentCorefr1Sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr1}, 
+								vocabFeature=${fcorefr12}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
 								vocabFilterInitArg=${SRC_TERM},
@@ -589,20 +593,10 @@ rs rules=RuleSet() {
 									value referenceName = "rfsent2";
 								});
 							
-	rule sentCorefr1Sent3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
-						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr1}, 
-								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
-								vocabFilterInit="PREFIX", 
-								vocabFilterInitArg=${SRC_TERM},
-								fn=(${strStem} o ${sent3}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfsent3";
-								});
 
 	rule sentCorefr2Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr2}, 
+								vocabFeature=${fcorefr21}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
 								vocabFilterInitArg=${SRC_TERM},
@@ -613,7 +607,7 @@ rs rules=RuleSet() {
 								
 	rule sentCorefr2Sent2 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
 						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr2}, 
+								vocabFeature=${fcorefr22}, 
 								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
 								vocabFilterInit="PREFIX", 
 								vocabFilterInitArg=${SRC_TERM},
@@ -622,16 +616,6 @@ rs rules=RuleSet() {
 									value referenceName = "rfsent2";
 								});
 							
-	rule sentCorefr2Sent3 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent2})))
-						-> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fcorefr2}, 
-								vocabFilterFn=Split(splitter="-/-", chunkSize="1", from="LAST", limit="1"), 
-								vocabFilterInit="PREFIX", 
-								vocabFilterInitArg=${SRC_TERM},
-								fn=(${strStem} o ${sent3}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfsent3";
-								});
 };
 
 model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
