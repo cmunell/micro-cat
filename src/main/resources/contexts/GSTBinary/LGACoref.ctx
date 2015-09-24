@@ -624,7 +624,7 @@ model lg=LGApproximation(rules=${rules}, t=".5", l2="0", convergenceEpsilon=".00
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.00001), trainingDimension="true");
+	dimension l2=Dimension(name="l2", values=(.00001, .0001), trainingDimension="true");
 	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
 
 	model model=${lg};
