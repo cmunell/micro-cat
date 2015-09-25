@@ -96,8 +96,8 @@ feature fgnpd2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 feature fgnpd3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${doc3}));
 
 feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
-feature fphrh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
-feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
+feature fphrh=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
+feature fphr1=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
 feature fphr2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins2}));
 feature fphr3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins3}));
 
