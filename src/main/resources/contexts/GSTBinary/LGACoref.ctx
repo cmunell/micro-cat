@@ -618,7 +618,7 @@ rs rules=RuleSet() {
 							
 };
 
-model lg=LGApproximation(rules=${rules}, t=".3", l2="0", convergenceEpsilon=".001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
+model lg=LGApproximation(rules=${rules}, t=".25", l2="0", convergenceEpsilon=".001", maxTrainingExamples="750001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };

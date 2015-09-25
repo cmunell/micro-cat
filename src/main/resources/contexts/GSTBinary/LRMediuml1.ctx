@@ -112,7 +112,7 @@ feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", t
 feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
 feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
 
-model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="750001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };
