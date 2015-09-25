@@ -566,7 +566,7 @@ rs rules=RuleSet() {
 							}
 					  ); 
 
-	rule phrhpre = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
+	rule phrhpre = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -577,7 +577,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phrhpreh = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
+	rule phrhpreh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphrh}, 
 								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -588,7 +588,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phrhsuf = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
+	rule phrhsuf = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -599,7 +599,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phrhsufh = (TokenSpanFnDataVocab(fn=(${strDef} o ${head})))
+	rule phrhsufh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphrh}, 
 								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -611,7 +611,7 @@ rs rules=RuleSet() {
 						);
 	
 	
-	rule phr1pre = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
+	rule phr1pre = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -622,7 +622,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phr1preh = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
+	rule phr1preh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphrh}, 
 								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -633,7 +633,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phr1suf = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
+	rule phr1suf = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
@@ -644,7 +644,7 @@ rs rules=RuleSet() {
 								}
 						);
 						
-	rule phr1sufh = (TokenSpanFnDataVocab(fn=(${strDef} o ${ins1})))
+	rule phr1sufh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphrh}, 
 								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
