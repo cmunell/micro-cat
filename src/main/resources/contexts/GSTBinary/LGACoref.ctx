@@ -565,17 +565,6 @@ rs rules=RuleSet() {
 								value referenceName = "rfctxa3";
 							}
 					  ); 
-
-	rule phrhpre = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
-					  -> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fphr1}, 
-								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
-								vocabFilterInit="FULL", 
-								fn=(${pre} o ${strDef} o ${ins1}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfpre";
-								}
-						);
 						
 	rule phrhpreh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
 					  -> (TokenSpanFnFilteredVocab(
@@ -585,17 +574,6 @@ rs rules=RuleSet() {
 								fn=(${pre} o ${strDef} o ${head}), 
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfpreh";
-								}
-						);
-						
-	rule phrhsuf = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${head})))
-					  -> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fphr1}, 
-								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
-								vocabFilterInit="FULL", 
-								fn=(${suf} o ${strDef} o ${ins1}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfsuf";
 								}
 						);
 						
@@ -611,47 +589,25 @@ rs rules=RuleSet() {
 						);
 	
 	
-	rule phr1pre = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
+	rule phr1pre1 = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
 								vocabFilterInit="FULL", 
 								fn=(${pre} o ${strDef} o ${ins1}), 
 								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfpre";
+									value referenceName = "rfpre1";
 								}
 						);
 						
-	rule phr1preh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
-					  -> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fphrh}, 
-								vocabFilterFn=(${pre} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
-								vocabFilterInit="FULL", 
-								fn=(${pre} o ${strDef} o ${head}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfpreh";
-								}
-						);
-						
-	rule phr1suf = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
+	rule phr1suf1 = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
 					  -> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fphr1}, 
 								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
 								vocabFilterInit="FULL", 
 								fn=(${suf} o ${strDef} o ${ins1}), 
 								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfsuf";
-								}
-						);
-						
-	rule phr1sufh = (TokenSpanFnDataVocabTrie(fn=(${strDef} o ${ins1})))
-					  -> (TokenSpanFnFilteredVocab(
-								vocabFeature=${fphrh}, 
-								vocabFilterFn=(${suf} o Filter(filter=${SRC_TERM}, type="EQUAL", filterTransform=Identity())), 
-								vocabFilterInit="FULL", 
-								fn=(${suf} o ${strDef} o ${head}), 
-								tokenExtractor="AllTokenSpans") {
-									value referenceName = "rfsufh";
+									value referenceName = "rfsuf1";
 								}
 						);
 	
