@@ -977,7 +977,7 @@ rs rules=RuleSet() {
 								});
 };
 
-model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
+model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };
