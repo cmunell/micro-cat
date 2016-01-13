@@ -111,6 +111,7 @@ feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", 
 feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${ins1}));
 feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
 feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${sent1}));
+feature fdoc1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter} o ${strBoW} o ${doc1}));
 
 model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {

@@ -64,12 +64,8 @@ ts_str_fn str=String(splitTokens="false");
 ts_str_fn strDef=String(cleanFn="CatDefaultCleanFn");
 ts_str_fn strStem=String(cleanFn="CatStemCleanFn");
 ts_str_fn strBoW=String(cleanFn="CatBagOfWordsFeatureCleanFn");
-str_fn pre3=Affix(nMin="3", nMax="3", type="PREFIX"); 
-str_fn suf3=Affix(nMin="3", nMax="3", type="SUFFIX"); 
-str_fn pre4=Affix(nMin="4", nMax="4", type="PREFIX"); 
-str_fn suf4=Affix(nMin="4", nMax="4", type="SUFFIX"); 
-str_fn pre5=Affix(nMin="5", nMax="5", type="PREFIX"); 
-str_fn suf5=Affix(nMin="5", nMax="5", type="SUFFIX"); 
+str_fn pre=Affix(nMin="3", nMax="5", type="PREFIX"); 
+str_fn suf=Affix(nMin="3", nMax="5", type="SUFFIX");
 str_fn filter=Filter(type="SUBSTRING", filterTransform=Identity(), filter="");
 str_fn filter_s=Filter(type="SUFFIX", filterTransform=Identity(), filter="");
 str_fn filter_p=Filter(type="PREFIX", filterTransform=Identity(), filter="");
@@ -102,7 +98,12 @@ feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${strStem} o ${ctxb1}));
 feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${strStem} o ${ctxa1}));
 
-model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="520001", batchSize="100", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
+feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${head}));
+feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${head}));
+feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_p} o ${pre} o ${strDef} o ${ins1}));
+feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${filter_s} o ${suf} o ${strDef} o ${ins1}));
+
+model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };

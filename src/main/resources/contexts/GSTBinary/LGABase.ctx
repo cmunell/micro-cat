@@ -96,20 +96,20 @@ feature fgnpd2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2",
 feature fgnpd3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${gaz} o ${str} o ${doc3}));
 
 feature fpos=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${pos});
-feature fphrh1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
+feature fphrh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${head}));
 feature fphr1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins1}));
 feature fphr2=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins2}));
 feature fphr3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strDef} o ${ins3}));
-
-feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${ins1}));
-feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${ins1}));
-feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${head}));
-feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${head}));
 
 feature fposb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxb1}));
 feature fposa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pos} o ${ctxa1}));
 feature fctxb1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxb1}));
 feature fctxa1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strStem} o ${ctxa1}));
+
+feature fpreh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${head}));
+feature fsufh=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${head}));
+feature fpre=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${pre} o ${strDef} o ${ins1}));
+feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${suf} o ${strDef} o ${ins1}));
 
 (ignored) feature fsent1=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${sent1}));
 (ignored) feature fsent2=TokenSpanFnDataVocabTrie(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${str} o ${sent2}));
@@ -570,7 +570,7 @@ rs rules=RuleSet() {
 								value referenceName = "rfctxa3";
 							}
 					  ); 
-
+	
 	rule sentCorefr1Sent1 = (TokenSpanFnFilteredVocab(fn=(${strStem} o ${sent1})))
 						-> (TokenSpanFnFilteredVocab(
 								vocabFeature=${fcorefr11}, 
@@ -615,16 +615,15 @@ rs rules=RuleSet() {
 								tokenExtractor="AllTokenSpans") {
 									value referenceName = "rfsent2";
 								});
-							
 };
 
-model lg=LogistmarGramression(rules=${rules}, t=".1", l2="0", convergenceEpsilon=".001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
+model lg=LGApproximation(rules=${rules}, t=".30", l2="0", convergenceEpsilon=".001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", computeTestEvaluations="false")
 {
 	array validLabels=${validLabels};
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.00000001), trainingDimension="true");
+	dimension l2=Dimension(name="l2", values=(.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1,1,10), trainingDimension="true");
 	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
 
 	model model=${lg};
