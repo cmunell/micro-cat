@@ -316,5 +316,9 @@ public class CatDataTools extends DataTools {
 		this.documentSet = documentSet;
 		return true;
 	}
-
+	
+	@Override
+	public DataTools makeInstance() {
+		return new CatDataTools(this.outputWriter, this);
+	}
 }
