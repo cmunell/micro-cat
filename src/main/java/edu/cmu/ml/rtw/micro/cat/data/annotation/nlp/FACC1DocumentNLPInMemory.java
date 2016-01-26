@@ -1,26 +1,21 @@
 package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.JSONObject;
-
-import edu.cmu.ml.rtw.generic.data.annotation.Document;
+import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.ConstituencyParse;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DependencyParse;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
-import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.Triple;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
@@ -36,25 +31,14 @@ public class FACC1DocumentNLPInMemory extends DocumentNLPInMemory {
 	public FACC1DocumentNLPInMemory(CatDataTools dataTools) {
 		super(dataTools);
 	}
-
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, JSONObject json) {
-		super(dataTools, json);
+	
+	public FACC1DocumentNLPInMemory(DataTools dataTools, String name) {
+		super(dataTools, name);
+		this.name = name;
 	}
 	
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, DocumentAnnotation documentAnnotation) {
-		super(dataTools, documentAnnotation);
-	}
-	
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, String jsonPath) {
-		super(dataTools, jsonPath);
-	}
-	
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, DocumentAnnotation documentAnnotation, PipelineNLP pipeline, Collection<AnnotationTypeNLP<?>> skipAnnotators) {
-		super(dataTools, documentAnnotation, pipeline, skipAnnotators);
-	}
-	
-	public FACC1DocumentNLPInMemory(CatDataTools dataTools, String name, String text, Language language, PipelineNLP pipeline, Collection<AnnotationTypeNLP<?>> skipAnnotators, boolean keepOriginalText) {
-		super(dataTools, name, text, language, pipeline, skipAnnotators, keepOriginalText);
+	public FACC1DocumentNLPInMemory(DataTools dataTools, String name, String originalText) {
+		super(dataTools, name, originalText);
 	}
 	
 	public FACC1DocumentNLPInMemory(CatDataTools dataTools,
@@ -256,18 +240,7 @@ public class FACC1DocumentNLPInMemory extends DocumentNLPInMemory {
 	}
 	
 	@Override
-	public DocumentNLP makeInstanceFromJSONFile(String path) {
-		return new FACC1DocumentNLPInMemory((CatDataTools)this.dataTools, path);
-	}
-	
-	@Override
-	public DocumentNLP makeInstanceFromMicroAnnotation(DocumentAnnotation documentAnnotation, PipelineNLP pipeline, Collection<AnnotationTypeNLP<?>> skipAnnotators) {
-		return new FACC1DocumentNLPInMemory((CatDataTools)this.dataTools, documentAnnotation, pipeline, skipAnnotators);
-	}
-	
-	@Override
-	public Document makeInstanceFromText(String name, String text, Language language, PipelineNLP pipeline,
-			Collection<AnnotationTypeNLP<?>> skipAnnotators, boolean keepOriginalText) {
-		return new FACC1DocumentNLPInMemory((CatDataTools)this.dataTools, name, text, language, pipeline, skipAnnotators, keepOriginalText);
+	public DocumentNLPMutable makeInstance(String name) {
+		return new FACC1DocumentNLPInMemory(this.dataTools, name);
 	}
 }

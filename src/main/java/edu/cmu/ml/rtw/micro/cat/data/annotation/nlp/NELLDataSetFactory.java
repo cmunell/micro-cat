@@ -17,6 +17,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -338,14 +339,14 @@ public class NELLDataSetFactory {
 	
 	private CatDataTools dataTools;
 	private NELLUtil nell;
-	private DocumentSet<DocumentNLP> documentSet;
+	private DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet;
 	private int id;
 	
 	public NELLDataSetFactory(CatDataTools dataTools) {
 		this(dataTools, null);
 	}
 	
-	public NELLDataSetFactory(CatDataTools dataTools, DocumentSet<DocumentNLP> documentSet) {
+	public NELLDataSetFactory(CatDataTools dataTools, DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
 		this.dataTools = dataTools;
 		this.nell = new NELLUtil(this.dataTools);
 		this.documentSet = documentSet;

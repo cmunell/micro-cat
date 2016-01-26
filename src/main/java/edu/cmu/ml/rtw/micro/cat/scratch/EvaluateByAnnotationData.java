@@ -18,8 +18,9 @@ import joptsimple.OptionSet;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -109,7 +110,7 @@ public class EvaluateByAnnotationData {
 		outputEvaluations(names, categoryToNameToPerformance, Evaluation.Measure.Recall);
 	}
 	
-	private static Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> loadAnnotatedData(File file, TokenSpansDatum.Tools<Boolean> tools, DocumentSetNLP<DocumentNLP> documents) {
+	private static Pair<String, DataSet<TokenSpansDatum<Boolean>, Boolean>> loadAnnotatedData(File file, TokenSpansDatum.Tools<Boolean> tools, DocumentSet<DocumentNLP, DocumentNLPMutable> documents) {
 		DataSet<TokenSpansDatum<Boolean>, Boolean> data = new DataSet<TokenSpansDatum<Boolean>, Boolean>(tools, null);
 		String fileName = file.getName();
 		String nameAndCategory = fileName.substring(fileName.lastIndexOf('.', fileName.lastIndexOf('.') - 1) + 1);

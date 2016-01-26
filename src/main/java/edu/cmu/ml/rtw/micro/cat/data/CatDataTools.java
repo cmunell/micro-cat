@@ -10,6 +10,7 @@ import edu.cmu.ml.rtw.generic.data.DataTools;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Stemmer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
@@ -25,7 +26,7 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
  */
 public class CatDataTools extends DataTools {
 	private CatProperties properties;
-	private DocumentSet<DocumentNLP> documentSet;
+	private DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet;
 	
 	public CatDataTools() {
 		this(new CatProperties());
@@ -50,7 +51,7 @@ public class CatDataTools extends DataTools {
 		this(outputWriter, properties, null);
 	}
 	
-	public CatDataTools(OutputWriter outputWriter, CatProperties properties, DocumentSet<DocumentNLP> documentSet) {
+	public CatDataTools(OutputWriter outputWriter, CatProperties properties, DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
 		super(outputWriter);
 		
 		this.properties = properties;
@@ -308,11 +309,11 @@ public class CatDataTools extends DataTools {
 		return this.properties;
 	}
 	
-	public DocumentSet<DocumentNLP> getDocumentSet() {
+	public DocumentSet<DocumentNLP, DocumentNLPMutable> getDocumentSet() {
 		return this.documentSet;
 	}
 	
-	public boolean setDocumentSet(DocumentSet<DocumentNLP> documentSet) {
+	public boolean setDocumentSet(DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
 		this.documentSet = documentSet;
 		return true;
 	}

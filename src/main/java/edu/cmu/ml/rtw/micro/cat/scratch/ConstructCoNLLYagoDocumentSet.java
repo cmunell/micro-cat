@@ -18,10 +18,12 @@ import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
@@ -153,24 +155,22 @@ public class ConstructCoNLLYagoDocumentSet {
 	private static boolean constructAnnotatedDocumentSetFromYagoTsvLines(String name, Map<String, List<List<String>>> documentLines) {
 		System.out.println("Constructing document set " + name + "...");
 		
-		DocumentSetNLP<DocumentNLP> documentSet = new DocumentSetNLP<DocumentNLP>(name);
-		
-		for (Entry<String, List<List<String>>> entry : documentLines.entrySet()) {
-			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
-			DocumentNLP document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
-			documentSet.add(document);
-		}
-		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
 		if (!outputDirectory.mkdir())
 			return false;
 		
-		System.out.println("Outputting document set " + name + "...");
+		StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation> documents = new StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation>(name, outputDirectory, new SerializerDocumentNLPMicro(dataTools));
+		for (Entry<String, List<List<String>>> entry : documentLines.entrySet()) {
+			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
+			DocumentNLPMutable document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
+			if (!documents.addItem(document))
+				return false;
+		}
 		
-		return documentSet.saveToMicroDirectory(outputDirectory.getAbsolutePath(), dataTools.getAnnotationTypesNLP());
+		return true;
 	}
 	
-	private static DocumentNLP constructAnnotatedDocumentFromYagoTsvLines(String documentName, List<List<String>> lines) {
+	private static DocumentNLPMutable constructAnnotatedDocumentFromYagoTsvLines(String documentName, List<List<String>> lines) {
 		Pair<JSONObject, Map<AnnotationTypeNLP<String>, List<Pair<Triple<Integer, Integer, Integer>, String>>>> jsonAndAnnotations = constructJSONObjectAndAnnotationsFromYagoTsvLines(documentName, lines);
 		
 		PipelineNLPExtendable yagoPipeline = new PipelineNLPExtendable();
@@ -244,8 +244,9 @@ public class ConstructCoNLLYagoDocumentSet {
 		});
 		
 		PipelineNLP pipeline = stanfordPipeline.weld(yagoPipeline);
-		
-		return new DocumentNLPInMemory(dataTools, documentName, jsonAndAnnotations.getFirst().toString(), Language.English, pipeline);
+		DocumentNLPInMemory document = new DocumentNLPInMemory(dataTools, documentName, jsonAndAnnotations.getFirst().toString());
+		pipeline.run(document);
+		return document;
 	}
 	
 	

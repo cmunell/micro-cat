@@ -6,9 +6,8 @@ import java.util.List;
 import org.junit.Test;
 
 import edu.cmu.ml.rtw.generic.data.Context;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.Annotation;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
@@ -23,13 +22,15 @@ public class NELLMentionCategorizerTest {
 		pipelineExtendable.extend(new NELLMentionCategorizer());
 		PipelineNLP pipeline = pipelineStanford.weld(pipelineExtendable);
 		
-		DocumentNLP document = new DocumentNLPInMemory(new CatDataTools(), 
+		DocumentNLPInMemory document = new DocumentNLPInMemory(new CatDataTools(), 
 				   "Test document", 
 				   "I baked a cake in the oven.  Barack Obama helped because I was " +
-				   "the deciding vote in the next presidential election in the United States.",
-				   Language.English, pipeline);
-
-		List<Annotation> annotations = document.toMicroAnnotation().getAllAnnotations();
+				   "the deciding vote in the next presidential election in the United States.");
+		pipeline.run(document);
+		
+		SerializerDocumentNLPMicro serializer = new SerializerDocumentNLPMicro(new CatDataTools());
+		
+		List<Annotation> annotations = serializer.serialize(document).getAllAnnotations();
 		for (Annotation annotation : annotations)
 			System.out.println(annotation.toJsonString());
 	}

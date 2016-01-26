@@ -19,7 +19,8 @@ import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.Annotation;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
@@ -89,6 +90,8 @@ public class NELLCategorizeNPMentions {
 		if (!initializeDataWriter())
 			return;
 		
+		final SerializerDocumentNLPJSONLegacy jsonSerializer = new SerializerDocumentNLPJSONLegacy(dataTools); 
+		final SerializerDocumentNLPMicro microSerializer = new SerializerDocumentNLPMicro(dataTools); 
 		final String outputFileExtension = (outputType == OutputType.TSV) ? "tsv" : "json"; 
 		ThreadMapper<File, Boolean> threads = new ThreadMapper<File, Boolean>(new ThreadMapper.Fn<File, Boolean>() {
 			public Boolean apply(File file) {
@@ -127,8 +130,11 @@ public class NELLCategorizeNPMentions {
 					
 					if (outputDocumentDir != null) {
 						if (outputType == OutputType.MICRO) {
-							document.toMicroAnnotation().writeToFile(outputDocumentFile.getAbsolutePath());
-						} else if (!document.saveToJSONFile(outputDocumentFile.getAbsolutePath())) {
+							if (!FileUtil.writeSerializedFile(microSerializer, outputDocumentFile.getAbsolutePath(), document)) {
+								dataTools.getOutputWriter().debugWriteln("ERROR: Failed to save annotated " + file.getName() + ". ");
+								return false;
+							}
+						} else if (!FileUtil.writeSerializedFile(jsonSerializer, outputDocumentFile.getAbsolutePath(), document)) {
 							dataTools.getOutputWriter().debugWriteln("ERROR: Failed to save annotated " + file.getName() + ". ");
 							return false;
 						}
@@ -138,10 +144,10 @@ public class NELLCategorizeNPMentions {
 				} else if (inputType == InputType.MICRO) {
 					List<DocumentAnnotation> annotations = DocumentAnnotation.fromFile(file.getAbsolutePath());
 					for (DocumentAnnotation annotation : annotations) {
-						documents.add(new DocumentNLPInMemory(dataTools, annotation));
+						documents.add((DocumentNLPInMemory)microSerializer.deserialize(annotation));
 					}
 				} else {
-					documents.add(new DocumentNLPInMemory(dataTools, FileUtil.readJSONFile(file)));
+					documents.add((DocumentNLPInMemory)FileUtil.readSerializedFile(jsonSerializer, file));
 				}
 				
 				DataSet<TokenSpansDatum<CategoryList>, CategoryList> labeledData = categorizer.categorizeNounPhraseMentions(documents.get(0));
@@ -340,7 +346,9 @@ public class NELLCategorizeNPMentions {
 	private static DocumentNLPInMemory constructAnnotatedDocument(File file) {
 		String fileText = FileUtil.readFile(file);
 		PipelineNLPStanford threadNlpAnnotator = new PipelineNLPStanford(nlpAnnotator);
-		return new DocumentNLPInMemory(dataTools, file.getName(), fileText, Language.English, threadNlpAnnotator);
+		DocumentNLPInMemory document = new DocumentNLPInMemory(dataTools, file.getName(), fileText);
+		threadNlpAnnotator.run(document);
+		return document;
 	}
 	
 	private static boolean initializeNlpPipeline() {

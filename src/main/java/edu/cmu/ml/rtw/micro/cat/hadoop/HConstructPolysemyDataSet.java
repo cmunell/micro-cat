@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
@@ -38,9 +39,9 @@ public class HConstructPolysemyDataSet {
 		public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String valueStr = value.toString();
 			String[] valueParts = valueStr.split("\t");
-			
+			SerializerDocumentNLPJSONLegacy serializer = new SerializerDocumentNLPJSONLegacy(new FACC1DocumentNLPInMemory(this.dataTools));
 			try {
-				FACC1DocumentNLPInMemory document = new FACC1DocumentNLPInMemory(this.dataTools, new JSONObject(valueParts[1]));
+				FACC1DocumentNLPInMemory document = (FACC1DocumentNLPInMemory)serializer.deserializeFromString(valueParts[1]);
 				if (document.isFailedFacc1Alignment())
 					return;
 				

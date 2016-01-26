@@ -12,6 +12,7 @@ import org.apache.hadoop.io.Text;
 
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Language;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1Annotation;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1DocumentNLPInMemory;
 
@@ -143,7 +144,7 @@ public class HConstructHazyFACC1 {
 			Map<Integer, Integer>  maxTokenIndices = new HashMap<Integer, Integer>();
 			int maxSentenceIndex = 0;
 			List<FACC1Annotation> facc1Annotations = new ArrayList<FACC1Annotation>();
-			
+			SerializerDocumentNLPJSONLegacy serializer = new SerializerDocumentNLPJSONLegacy(this.dataTools);
 			for (Text value : values) {
 				String valueStr = value.toString();
 				HazyTokenAnnotation hazyToken = HazyTokenAnnotation.fromString(valueStr);
@@ -242,7 +243,7 @@ public class HConstructHazyFACC1 {
 							endBytes,
 							facc1Annotations);
 			
-			this.outputValue.set(hazyDocument.toJSON().toString());
+			this.outputValue.set(serializer.serializeToString(hazyDocument));
 			context.write(key, this.outputValue);
 		}
 	}

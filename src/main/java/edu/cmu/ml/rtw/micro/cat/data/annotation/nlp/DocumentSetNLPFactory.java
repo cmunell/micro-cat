@@ -2,10 +2,16 @@ package edu.cmu.ml.rtw.micro.cat.data.annotation.nlp;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
+import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
 import edu.cmu.ml.rtw.micro.cat.data.CatDataTools;
 import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 
@@ -28,26 +34,23 @@ public class DocumentSetNLPFactory {
 		CoNLL_YAGO_testb
 	}
 	
-	public static DocumentSetNLP<DocumentNLP> getDocumentSet(SetName name, CatProperties properties, CatDataTools dataTools) {
+	public static DocumentSet<DocumentNLP, DocumentNLPMutable> getDocumentSet(SetName name, CatProperties properties, CatDataTools dataTools) {
 		if (name == SetName.HazyFacc1) {
-			return DocumentSet.loadFromJSONDirectory(properties.getHazyFacc1DataDirPath(), 
-					new FACC1DocumentNLPInMemory(dataTools), 
-					new DocumentSetNLP<DocumentNLP>("HazyFacc1"));
+			SerializerDocumentNLPJSONLegacy serializer = new SerializerDocumentNLPJSONLegacy(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, JSONObject> storage = new StoredCollectionFileSystem<DocumentNLPMutable, JSONObject>("HazyFacc1", new File(properties.getHazyFacc1DataDirPath()), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
 		} else if (name == SetName.CoNLL_YAGO_train) {
-			return DocumentSetNLP.loadFromMicroPathThroughPipeline(
-					"CoNLL_YAGO_train",
-					new File(properties.getCoNLLYagoDataDirPath(), "train").getAbsolutePath(), 
-					new DocumentNLPInMemory(dataTools));
+			SerializerDocumentNLPMicro serializer = new SerializerDocumentNLPMicro(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation> storage = new StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation>("CoNLL_YAGO_train", new File(properties.getCoNLLYagoDataDirPath(), "train"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);		
 		} else if (name == SetName.CoNLL_YAGO_testa) {
-			return DocumentSetNLP.loadFromMicroPathThroughPipeline(
-					"CoNLL_YAGO_testa",
-					new File(properties.getCoNLLYagoDataDirPath(), "testa").getAbsolutePath(), 
-					new DocumentNLPInMemory(dataTools));
+			SerializerDocumentNLPMicro serializer = new SerializerDocumentNLPMicro(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation> storage = new StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation>("CoNLL_YAGO_testa", new File(properties.getCoNLLYagoDataDirPath(), "testa"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
 		} else if (name == SetName.CoNLL_YAGO_testb) {
-			return DocumentSetNLP.loadFromMicroPathThroughPipeline(
-					"CoNLL_YAGO_testb",
-					new File(properties.getCoNLLYagoDataDirPath(), "testb").getAbsolutePath(), 
-					new DocumentNLPInMemory(dataTools));
+			SerializerDocumentNLPMicro serializer = new SerializerDocumentNLPMicro(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation> storage = new StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation>("CoNLL_YAGO_testb", new File(properties.getCoNLLYagoDataDirPath(), "testb"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
 		} else {
 			return null;
 		}

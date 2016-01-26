@@ -14,9 +14,10 @@ import joptsimple.OptionSet;
 import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentSetNLP;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
@@ -109,7 +110,7 @@ public class TrainGSTBinary {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run validation.");
 	}
 	
-	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> constructDataSet(DocumentSetNLP<DocumentNLP> documentSet) {
+	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> constructDataSet(DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
 		context.getDatumTools().getDataTools().getOutputWriter().debugWriteln("Constructing data from " + documentSet.getName() + " documents...");
 		
 		Set<String> documentNames = documentSet.getDocumentNames();
