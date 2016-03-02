@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.FACC1Annotation;
@@ -62,7 +63,7 @@ public class HConstructPolysemyDataSet {
 					
 					JSONObject valueJSON = new JSONObject();
 					valueJSON.put("document", document.getName());
-					valueJSON.put("tokenSpan", tokenSpan.toJSON(true));
+					valueJSON.put("tokenSpan", tokenSpan.toJSON(SerializationType.SENTENCE_AND_DOCUMENT));
 					
 					this.outputKey.set(phrase + "," + freebaseTypesStr.toString());
 					this.outputValue.set(valueJSON.toString());

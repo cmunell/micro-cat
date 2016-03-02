@@ -22,6 +22,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Pair;
@@ -148,7 +149,7 @@ public class EvaluateByAnnotationData {
 				System.out.println("ERROR: Equal labels on " + label + 
 						" " + datum.getId() + 
 						" " + datum.getTokenSpans()[0].toString() + 
-						" " + datum.getTokenSpans()[0].toJSON(true) + 
+						" " + datum.getTokenSpans()[0].toJSON(SerializationType.SENTENCE_AND_DOCUMENT) + 
 						" " + mentionLabeledData.getDatumById(datum.getId()).getLabel());
 			}
 				

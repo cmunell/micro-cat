@@ -11,17 +11,17 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Map.Entry;
 
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.InverseLabelIndicator;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.feature.Feature;
-import edu.cmu.ml.rtw.generic.data.feature.FeaturizedDataSet;
+import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
+import edu.cmu.ml.rtw.generic.data.feature.FeatureSet;
 import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.SupervisedModelCompositeBinary;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
@@ -67,13 +67,13 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 	public static final String DEFAULT_MODEL_FILE_PATH_PREFIX = "models/GSTBinaryNELLNormalized/HazyFacc1_AllNELL_c90_e2000/LRBasel2.model.out.";
 	
 	private int datumId;
-	private Context<TokenSpansDatum<CategoryList>, CategoryList> context;
+	private DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context;
 	private NELLUtil nell;
 	
 	private CategoryList validCategories;
 	private double mentionModelThreshold;
 	private InverseLabelIndicator<CategoryList> inverseLabelIndicator;
-	private List<Feature<TokenSpansDatum<CategoryList>, CategoryList>> features;
+	private FeatureSet<TokenSpansDatum<CategoryList>, CategoryList> features;
 	private SupervisedModel<TokenSpansDatum<CategoryList>, CategoryList> model;
 	private int maxThreads;
 	
@@ -198,7 +198,7 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 	 */
 	public NELLMentionCategorizer(Datum.Tools<TokenSpansDatum<CategoryList>, CategoryList> datumTools, CategoryList validCategories, double mentionModelThreshold, LabelType labelType, File featuresFile, String modelFilePathPrefix, int maxThreads) {
 		this.datumId = 0;
-		this.context = new Context<TokenSpansDatum<CategoryList>, CategoryList>(datumTools);
+		this.context = new DatumContext<TokenSpansDatum<CategoryList>, CategoryList>(datumTools);
 		
 		this.validCategories = validCategories;
 		this.mentionModelThreshold = mentionModelThreshold;
@@ -232,19 +232,18 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			return true;
 		}
 		
-		this.features = new ArrayList<Feature<TokenSpansDatum<CategoryList>, CategoryList>>();
 		List<LabelIndicator<CategoryList>> labelIndicators = new ArrayList<LabelIndicator<CategoryList>>();
 		
 		dataTools.getOutputWriter().debugWriteln("Deserializing features...");
 		
 		BufferedReader featureReader = FileUtil.getFileReader(featuresFile.getPath());
-		Context<TokenSpansDatum<CategoryList>, CategoryList> featureContext = Context.deserialize(this.context.getDatumTools(), featureReader);
+		DatumContext<TokenSpansDatum<CategoryList>, CategoryList> featureContext = DatumContext.run(this.context.getDatumTools(), featureReader);
 		try { featureReader.close(); } catch (IOException e1) { return false; }
-		this.features = featureContext.getFeatures();
+		this.features = new FeatureSet<TokenSpansDatum<CategoryList>, CategoryList>(this.context, featureContext.getFeatures());
 
-		Context<TokenSpansDatum<Boolean>, Boolean> binaryContext = featureContext.makeBinary(TokenSpansDatum.getBooleanTools(this.context.getDatumTools().getDataTools()), null);
+		DatumContext<TokenSpansDatum<Boolean>, Boolean> binaryContext = featureContext.makeBinary(TokenSpansDatum.getBooleanTools(this.context.getDatumTools().getDataTools()), null);
 		
-		dataTools.getOutputWriter().debugWriteln("Finished deserializing " + this.features.size() + " features.");
+		dataTools.getOutputWriter().debugWriteln("Finished deserializing " + this.features.getFeatureCount() + " features.");
 		
 		Map<String, SupervisedModel<TokenSpansDatum<Boolean>, Boolean>> binaryModelMap = new HashMap<String, SupervisedModel<TokenSpansDatum<Boolean>, Boolean>>();
 		ThreadMapper<String, Boolean> threads = new ThreadMapper<String, Boolean>(new ThreadMapper.Fn<String, Boolean>() {
@@ -254,7 +253,7 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 					dataTools.getOutputWriter().debugWriteln("Deserializing " + category + " model at " + modelFile.getPath());
 					BufferedReader modelReader = FileUtil.getFileReader(modelFile.getPath());
 					
-					Context<TokenSpansDatum<Boolean>, Boolean> modelContext = Context.deserialize(binaryContext.getDatumTools(), modelReader);
+					DatumContext<TokenSpansDatum<Boolean>, Boolean> modelContext = DatumContext.run(binaryContext.getDatumTools(), modelReader);
 					try { modelReader.close(); } catch (IOException e) { return false; }
 					
 					if (modelContext == null || modelContext.getModels().size() == 0) {
@@ -321,12 +320,8 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 				&& (this.features == null || this.model == null)))
 			return null;
 		
-		FeaturizedDataSet<TokenSpansDatum<CategoryList>, CategoryList> featurizedData = 
-			new FeaturizedDataSet<TokenSpansDatum<CategoryList>, CategoryList>("", 
-																	this.features, 
-																	this.maxThreads, 
-																	this.context.getDatumTools(),
-																	null);
+		DataSet<TokenSpansDatum<CategoryList>, CategoryList> featurizedData = 
+			new DataSet<TokenSpansDatum<CategoryList>, CategoryList>(this.context.getDatumTools(), null);
 		
 		DataSet<TokenSpansDatum<CategoryList>, CategoryList> labeledData = new DataSet<TokenSpansDatum<CategoryList>, CategoryList>(this.context.getDatumTools(), null);
 		
@@ -342,10 +337,12 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 		}
 		
 		if (this.mentionModelThreshold >= 0) {
-			if (!featurizedData.precomputeFeatures())
+			DataFeatureMatrix<TokenSpansDatum<CategoryList>, CategoryList> mat = 
+					new DataFeatureMatrix<>(this.context, "", featurizedData, this.features);
+			if (!mat.precompute())
 				return null;
 			
-			Map<TokenSpansDatum<CategoryList>, CategoryList> dataLabels = this.model.classify(featurizedData);
+			Map<TokenSpansDatum<CategoryList>, CategoryList> dataLabels = this.model.classify(mat);
 	
 			for (Entry<TokenSpansDatum<CategoryList>, CategoryList> entry : dataLabels.entrySet()) {
 				CategoryList label = filterToValidCategories(entry.getValue());

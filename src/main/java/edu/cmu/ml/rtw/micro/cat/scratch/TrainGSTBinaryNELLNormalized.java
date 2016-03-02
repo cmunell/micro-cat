@@ -7,8 +7,8 @@ import java.util.Map;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -94,7 +94,7 @@ public class TrainGSTBinaryNELLNormalized {
 		dataTools.setRandomSeed(randomSeed);
 		
 		TokenSpansDatum.Tools<CategoryList> datumTools = TokenSpansDatum.getCategoryListTools(dataTools);
-		Context<TokenSpansDatum<CategoryList>, CategoryList> context = Context.deserialize(datumTools, FileUtil.getFileReader(experimentInputPath));
+		DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context = DatumContext.run(datumTools, FileUtil.getFileReader(experimentInputPath));
 		if (context == null) {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to deserialize context.");
 			return;

@@ -22,6 +22,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTag;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.PoSTagClass;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.data.feature.FeatureNer;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Pair;
@@ -570,7 +571,7 @@ public class TokenSpansDatum<L> extends Datum<L> {
 				
 				JSONArray tokenSpans = new JSONArray();
 				for (TokenSpan tokenSpan : datum.tokenSpans) {
-					tokenSpans.put(tokenSpan.toJSON(true));
+					tokenSpans.put(tokenSpan.toJSON(SerializationType.SENTENCE_AND_DOCUMENT));
 				}
 				
 				json.put("tokenSpans", tokenSpans);

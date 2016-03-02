@@ -5,8 +5,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.TokenSpansDatum;
-import edu.cmu.ml.rtw.generic.data.Context;
-import edu.cmu.ml.rtw.generic.data.feature.FeaturizedDataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
 import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluationRecall;
@@ -25,12 +25,12 @@ public class SupervisedModelEvaluationPolyRecall<L> extends SupervisedModelEvalu
 		super();
 	}
 	
-	public SupervisedModelEvaluationPolyRecall(Context<TokenSpansDatum<L>, L> context) {
+	public SupervisedModelEvaluationPolyRecall(DatumContext<TokenSpansDatum<L>, L> context) {
 		super(context);
 	}
 	
 	@Override
-	protected double compute(SupervisedModel<TokenSpansDatum<L>, L> model, FeaturizedDataSet<TokenSpansDatum<L>, L> data, Map<TokenSpansDatum<L>, L> predictions) {
+	protected double compute(SupervisedModel<TokenSpansDatum<L>, L> model, DataFeatureMatrix<TokenSpansDatum<L>, L> data, Map<TokenSpansDatum<L>, L> predictions) {
 		Map<TokenSpansDatum<L>, L> polysemousPredictions = new HashMap<TokenSpansDatum<L>, L>();
 		
 		for (Entry<TokenSpansDatum<L>, L> prediction : predictions.entrySet())
@@ -46,7 +46,7 @@ public class SupervisedModelEvaluationPolyRecall<L> extends SupervisedModelEvalu
 	}
 
 	@Override
-	public SupervisedModelEvaluation<TokenSpansDatum<L>, L> makeInstance(Context<TokenSpansDatum<L>, L> context) {
+	public SupervisedModelEvaluation<TokenSpansDatum<L>, L> makeInstance(DatumContext<TokenSpansDatum<L>, L> context) {
 		return new SupervisedModelEvaluationPolyRecall<L>(context);
 	}
 

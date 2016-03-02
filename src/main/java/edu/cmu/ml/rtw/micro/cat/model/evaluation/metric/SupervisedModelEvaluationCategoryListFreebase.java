@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.InverseLabelIndicator;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.feature.FeaturizedDataSet;
+import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
 import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.parse.Obj;
@@ -62,7 +62,7 @@ public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedMod
 		
 	}
 	
-	public SupervisedModelEvaluationCategoryListFreebase(Context<TokenSpansDatum<CategoryList>, CategoryList> context) {
+	public SupervisedModelEvaluationCategoryListFreebase(DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context) {
 		this.context = context;
 	}
 	
@@ -74,7 +74,7 @@ public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedMod
 	@Override
 	protected double compute(
 			SupervisedModel<TokenSpansDatum<CategoryList>, CategoryList> model,
-			FeaturizedDataSet<TokenSpansDatum<CategoryList>, CategoryList> data,
+			DataFeatureMatrix<TokenSpansDatum<CategoryList>, CategoryList> data,
 			Map<TokenSpansDatum<CategoryList>, CategoryList> predictions) {
 		
 		double tp = 0.0;
@@ -83,15 +83,15 @@ public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedMod
 		double fn = 0.0;
 		
 
-		NELLUtil nell = new NELLUtil((CatDataTools)data.getDatumTools().getDataTools());
+		NELLUtil nell = new NELLUtil((CatDataTools)data.getData().getDatumTools().getDataTools());
 		List<String> freebaseCategories = nell.getFreebaseCategories();
 		List<String> indicatorLabels = new ArrayList<String>();
-		for (LabelIndicator<CategoryList> indicator : data.getDatumTools().getLabelIndicators())
+		for (LabelIndicator<CategoryList> indicator : data.getData().getDatumTools().getLabelIndicators())
 			if (freebaseCategories.contains(indicator.toString()))
 				indicatorLabels.add(indicator.toString());
 	
-		Gazetteer freebaseNELLCategoryGazetteer = data.getDatumTools().getDataTools().getGazetteer("FreebaseNELLCategory");
-		InverseLabelIndicator<CategoryList> inverseLabelIndicator = data.getDatumTools().getInverseLabelIndicator("UnweightedConstrained");
+		Gazetteer freebaseNELLCategoryGazetteer = data.getData().getDatumTools().getDataTools().getGazetteer("FreebaseNELLCategory");
+		InverseLabelIndicator<CategoryList> inverseLabelIndicator = data.getData().getDatumTools().getInverseLabelIndicator("UnweightedConstrained");
 		for (Entry<TokenSpansDatum<CategoryList>, CategoryList> entry : predictions.entrySet()) {
 			TokenSpan[] datumTokenSpans = entry.getKey().getTokenSpans();
 			for (int i = 0; i < datumTokenSpans.length; i++) {
@@ -184,7 +184,7 @@ public class SupervisedModelEvaluationCategoryListFreebase extends SupervisedMod
 	}
 
 	@Override
-	public SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> makeInstance(Context<TokenSpansDatum<CategoryList>, CategoryList> context) {
+	public SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> makeInstance(DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context) {
 		return new SupervisedModelEvaluationCategoryListFreebase(context);
 	}
 }

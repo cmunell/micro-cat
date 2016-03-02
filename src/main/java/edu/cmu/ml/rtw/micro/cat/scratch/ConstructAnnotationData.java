@@ -11,12 +11,13 @@ import java.util.Map;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan.SerializationType;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
@@ -102,7 +103,7 @@ public class ConstructAnnotationData {
 			public Pair<String, Integer> apply(String label) {
 				LabelIndicator<CategoryList> labelIndicator = nellLabeledData.getDatumTools().getLabelIndicator(label);
 				Datum.Tools<TokenSpansDatum<Boolean>, Boolean> binaryTools = nellLabeledData.getDatumTools().makeBinaryDatumTools(labelIndicator);
-				Context<TokenSpansDatum<Boolean>, Boolean> binaryContext = new Context<TokenSpansDatum<Boolean>, Boolean>(binaryTools);
+				DatumContext<TokenSpansDatum<Boolean>, Boolean> binaryContext = new DatumContext<TokenSpansDatum<Boolean>, Boolean>(binaryTools);
 				DataSet<TokenSpansDatum<Boolean>, Boolean> binaryData = nellLabeledData.makeBinary(labelIndicator, binaryContext);
 				DataSet<TokenSpansDatum<Boolean>, Boolean> mentionLabeledBinaryData = mentionLabeledData.makeBinary(labelIndicator, binaryContext);
 				int predictionCount = 0;
@@ -148,7 +149,7 @@ public class ConstructAnnotationData {
 					String mentionStr = span.toString();
 					String sentenceStr = getSpanSurroundingSentences(span);
 					String idStr = String.valueOf(datum.getId());
-					String spanJsonStr = span.toJSON(true).toString();
+					String spanJsonStr = span.toJSON(SerializationType.SENTENCE_AND_DOCUMENT).toString();
 					
 					StringBuilder annotationLine = new StringBuilder();
 					annotationLine.append("\t");

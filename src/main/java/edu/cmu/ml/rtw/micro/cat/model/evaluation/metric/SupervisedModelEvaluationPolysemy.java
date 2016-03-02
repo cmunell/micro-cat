@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
-import edu.cmu.ml.rtw.generic.data.feature.FeaturizedDataSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
+import edu.cmu.ml.rtw.generic.data.feature.DataFeatureMatrix;
 import edu.cmu.ml.rtw.generic.model.SupervisedModel;
 import edu.cmu.ml.rtw.generic.model.evaluation.metric.SupervisedModelEvaluation;
 import edu.cmu.ml.rtw.generic.parse.Obj;
@@ -41,7 +41,7 @@ public class SupervisedModelEvaluationPolysemy extends SupervisedModelEvaluation
 		
 	}
 	
-	public SupervisedModelEvaluationPolysemy(Context<TokenSpansDatum<CategoryList>, CategoryList> context) {
+	public SupervisedModelEvaluationPolysemy(DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context) {
 		this.context = context;
 	}
 	
@@ -53,13 +53,13 @@ public class SupervisedModelEvaluationPolysemy extends SupervisedModelEvaluation
 	@Override
 	protected double compute(
 			SupervisedModel<TokenSpansDatum<CategoryList>, CategoryList> model,
-			FeaturizedDataSet<TokenSpansDatum<CategoryList>, CategoryList> data,
+			DataFeatureMatrix<TokenSpansDatum<CategoryList>, CategoryList> data,
 			Map<TokenSpansDatum<CategoryList>, CategoryList> predictions) {
 		List<String> indicatorLabels = new ArrayList<String>();
-		for (LabelIndicator<CategoryList> indicator : data.getDatumTools().getLabelIndicators())
+		for (LabelIndicator<CategoryList> indicator : data.getData().getDatumTools().getLabelIndicators())
 			indicatorLabels.add(indicator.toString());
 
-		NELLUtil nell = new NELLUtil((CatDataTools)data.getDatumTools().getDataTools());
+		NELLUtil nell = new NELLUtil((CatDataTools)data.getData().getDatumTools().getDataTools());
 		double polysemous = 0.0;
 		for (Entry<TokenSpansDatum<CategoryList>, CategoryList> entry : predictions.entrySet()) {
 			String np = entry.getKey().getTokenSpans()[0].toString();
@@ -106,7 +106,7 @@ public class SupervisedModelEvaluationPolysemy extends SupervisedModelEvaluation
 	}
 
 	@Override
-	public SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> makeInstance(Context<TokenSpansDatum<CategoryList>, CategoryList> context) {
+	public SupervisedModelEvaluation<TokenSpansDatum<CategoryList>, CategoryList> makeInstance(DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context) {
 		return new SupervisedModelEvaluationPolysemy(context);
 	}
 

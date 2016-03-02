@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import edu.cmu.ml.rtw.generic.data.Context;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.Annotation;
@@ -50,6 +50,6 @@ public class NELLMentionCategorizerTest {
 						  "array w_172144=(\"fsufh_ple\", \"-1.078403333184309\", \"172144\"); " +
 						  "array w_85088=(\"fphrh1_people\", \"-0.8212790847351784\", \"85088\"); };";
 	
-		System.out.println(Context.deserialize(TokenSpansDatum.getCategoryListTools(new CatDataTools()), new StringReader(modelStr)).getModels().get(0).toParse(true).toString());
+		System.out.println(DatumContext.run(TokenSpansDatum.getCategoryListTools(new CatDataTools()), new StringReader(modelStr)).getModels().get(0).toParse(true).toString());
 	}
 }

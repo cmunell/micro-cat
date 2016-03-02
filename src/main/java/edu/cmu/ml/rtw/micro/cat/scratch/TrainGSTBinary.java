@@ -11,9 +11,9 @@ import java.util.Set;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
-import edu.cmu.ml.rtw.generic.data.Context;
 import edu.cmu.ml.rtw.generic.data.annotation.DataSet;
 import edu.cmu.ml.rtw.generic.data.annotation.Datum.Tools.LabelIndicator;
+import edu.cmu.ml.rtw.generic.data.annotation.DatumContext;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
@@ -60,7 +60,7 @@ public class TrainGSTBinary {
 	private static DocumentSetNLPFactory.SetName testDocumentSetName;
 	private static AnnotationTypeNLP<String> categoryType;
 	
-	private static Context<TokenSpansDatum<CategoryList>, CategoryList> context;
+	private static DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context;
 	private static TokenSpansDatum.Tools<CategoryList> datumTools;
 	private static CatProperties properties;
 	private static CatDataTools dataTools;
@@ -208,7 +208,7 @@ public class TrainGSTBinary {
 		dataTools.setRandomSeed(randomSeed);
 		datumTools = TokenSpansDatum.getCategoryListTools(dataTools);
 		
-		context = Context.deserialize(datumTools, FileUtil.getFileReader(experimentInputPath));
+		context = DatumContext.run(datumTools, FileUtil.getFileReader(experimentInputPath));
 		if (context == null) {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to deserialize context.");
 			return false;
