@@ -11,6 +11,7 @@ import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.str.StringTransform;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
 import edu.cmu.ml.rtw.generic.util.Stemmer;
 import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
@@ -59,7 +60,7 @@ public class CatDataTools extends DataTools {
 		this.addPath("CregCmd", new Path("CregCmd", properties.getCregCommandPath()));
 	
 		// For cleaning strings, and replacing all white space with "_"
-		this.addCleanFn(new DataTools.StringTransform() {
+		this.addCleanFn(new StringTransform() {
 			private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<String, String>();
 			
 			public String toString() {
@@ -78,7 +79,7 @@ public class CatDataTools extends DataTools {
 			}
 		});
 		
-		this.addCleanFn(new DataTools.StringTransform() {
+		this.addCleanFn(new StringTransform() {
 			private ConcurrentHashMap<String, String> cache = new ConcurrentHashMap<String, String>();
 			
 			public String toString() {
@@ -97,7 +98,7 @@ public class CatDataTools extends DataTools {
 			}
 		});
 		
-		this.addCleanFn(new DataTools.StringTransform() {
+		this.addCleanFn(new StringTransform() {
 			public String toString() {
 				return "CatBagOfWordsFeatureCleanFn";
 			}
@@ -111,7 +112,7 @@ public class CatDataTools extends DataTools {
 			}
 		});
 		
-		this.addCleanFn(new DataTools.StringTransform() {
+		this.addCleanFn(new StringTransform() {
 			public String toString() {
 				return "Trim";
 			}
@@ -121,7 +122,7 @@ public class CatDataTools extends DataTools {
 			}
 		});
 		
-		this.addCleanFn(new DataTools.StringTransform() {
+		this.addCleanFn(new StringTransform() {
 			public String toString() {
 				return "TrimToLower";
 			}
@@ -155,7 +156,7 @@ public class CatDataTools extends DataTools {
 			str = str.replace(')', ' ');
 			str = str.replace('=', ' ');
 		}
-				
+			
 		str = str.replaceAll("\\d+", "[D]") 
 				 .replaceAll("_", " ")
 				 .trim();
