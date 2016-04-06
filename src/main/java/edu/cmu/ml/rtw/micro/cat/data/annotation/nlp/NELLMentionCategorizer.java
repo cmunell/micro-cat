@@ -306,6 +306,7 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 			labelIndicators.add(labelIndicator);	
 		}
 		
+		binaryContext.addValue("maxThreads", String.valueOf(this.maxThreads));
 		this.model = new SupervisedModelCompositeBinary<TokenSpansDatum<Boolean>, TokenSpansDatum<CategoryList>, CategoryList>(binaryModels, labelIndicators, binaryContext, inverseLabelIndicator);
 		dataTools.getOutputWriter().debugWriteln("Finished deserializing models.");
 		return true;
