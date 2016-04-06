@@ -242,7 +242,6 @@ public class NELLMentionCategorizer implements AnnotatorTokenSpan<String> {
 		this.features = new FeatureSet<TokenSpansDatum<CategoryList>, CategoryList>(this.context, featureContext.getFeatures());
 
 		DatumContext<TokenSpansDatum<Boolean>, Boolean> binaryContext = featureContext.makeBinary(TokenSpansDatum.getBooleanTools(this.context.getDatumTools().getDataTools()), null);
-		binaryContext.addFeatureSet(this.features.makeBinary(null, binaryContext));
 		
 		dataTools.getOutputWriter().debugWriteln("Finished deserializing " + this.features.getFeatureCount() + " features.");
 		
