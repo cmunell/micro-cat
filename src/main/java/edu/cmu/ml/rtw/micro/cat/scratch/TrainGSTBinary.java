@@ -108,6 +108,7 @@ public class TrainGSTBinary {
 		
 		if (!validation.runAndOutput())
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run validation.");
+		
 	}
 	
 	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> constructDataSet(DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
