@@ -164,7 +164,7 @@ public class ConstructCoNLLYagoDocumentSet {
 		System.out.println("Constructing document set " + name + "...");
 		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
-		if (!outputDirectory.mkdir()) {
+		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
 			dataTools.getOutputWriter().debugWriteln("Failed to create directory " + outputDirectory.getAbsolutePath());
 			return false;
 		}
