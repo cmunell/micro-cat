@@ -15,14 +15,15 @@ import org.json.JSONObject;
 
 import edu.cmu.ml.rtw.generic.data.Gazetteer;
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
+import edu.cmu.ml.rtw.generic.data.annotation.SerializerDocument;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPMicro;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.Token;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
-import edu.cmu.ml.rtw.generic.data.annotation.nlp.micro.DocumentAnnotation;
 import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
@@ -39,8 +40,9 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
  * ConstructCoNLLDocumentSet takes the CoNLL-Yago data from
  * https://www.mpi-inf.mpg.de/departments/databases-and-information-systems/research/yago-naga/aida/downloads/,
  * runs it through the Stanford CoreNLP pipeline,
- * and then outputs the results as documents in stored
- * in the micro-reading annotation format (http://rtw.ml.cmu.edu/wiki/index.php/Annotation).
+ * and then outputs the results as documents stored
+ * in either the micro-reading annotation format (http://rtw.ml.cmu.edu/wiki/index.php/Annotation) or the BSON
+ * format output by edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON.
  * The location of the output of this program is currently given at 
  * http://rtw.ml.cmu.edu/wiki/index.php/Datasets#List_of_local_datasets
  * 
@@ -53,6 +55,7 @@ public class ConstructCoNLLYagoDocumentSet {
 	
 	public static void main(String[] args) {
 		File yagoInputFile = new File(args[0]);
+		boolean bsonFormat = Boolean.valueOf(args[1]);
 		
 		stanfordPipeline = new PipelineNLPStanford();
 		stanfordPipeline.initialize(null, new JSONTokenizer());
@@ -64,11 +67,11 @@ public class ConstructCoNLLYagoDocumentSet {
 		Map<String, List<List<String>>> testaDocuments = documentSets[1];
 		Map<String, List<List<String>>> testbDocuments = documentSets[2];
 		
-		if (!constructAnnotatedDocumentSetFromYagoTsvLines("train", trainDocuments))
+		if (!constructAnnotatedDocumentSetFromYagoTsvLines("train", trainDocuments, bsonFormat))
 			dataTools.getOutputWriter().debugWriteln("Failed to construct train data.");
-		if (!constructAnnotatedDocumentSetFromYagoTsvLines("testa", testaDocuments))
+		if (!constructAnnotatedDocumentSetFromYagoTsvLines("testa", testaDocuments, bsonFormat))
 			dataTools.getOutputWriter().debugWriteln("Failed to construct testa data.");
-		if (!constructAnnotatedDocumentSetFromYagoTsvLines("testb", testbDocuments))
+		if (!constructAnnotatedDocumentSetFromYagoTsvLines("testb", testbDocuments, bsonFormat))
 			dataTools.getOutputWriter().debugWriteln("Failed to construct testb data.");
 	}
 	
@@ -152,14 +155,17 @@ public class ConstructCoNLLYagoDocumentSet {
 		return returnData;
 	}
 	
-	private static boolean constructAnnotatedDocumentSetFromYagoTsvLines(String name, Map<String, List<List<String>>> documentLines) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private static boolean constructAnnotatedDocumentSetFromYagoTsvLines(String name, Map<String, List<List<String>>> documentLines, boolean bsonFormat) {
 		System.out.println("Constructing document set " + name + "...");
 		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
 		if (!outputDirectory.mkdir())
 			return false;
 		
-		StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation> documents = new StoredCollectionFileSystem<DocumentNLPMutable, DocumentAnnotation>(name, outputDirectory, new SerializerDocumentNLPMicro(dataTools));
+		SerializerDocument<DocumentNLPMutable, ?> serializer = (bsonFormat) ? new SerializerDocumentNLPBSON(dataTools) : new SerializerDocumentNLPMicro(dataTools);
+		
+		StoredCollectionFileSystem<DocumentNLPMutable, ?> documents = new StoredCollectionFileSystem(name, outputDirectory, serializer);
 		for (Entry<String, List<List<String>>> entry : documentLines.entrySet()) {
 			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
 			DocumentNLPMutable document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
