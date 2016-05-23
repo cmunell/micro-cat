@@ -46,6 +46,10 @@ import edu.cmu.ml.rtw.micro.cat.data.annotation.nlp.AnnotationTypeNLPCat;
  * The location of the output of this program is currently given at 
  * http://rtw.ml.cmu.edu/wiki/index.php/Datasets#List_of_local_datasets
  * 
+ * Arguments:
+ * 	- YAGO source input dataset file path (i.e. aida-yago2-dataset/AIDA-YAGO2-dataset.tsv)
+ *  - Boolean indicator of whether to output in bson format (or alternatively, the NELL micro-annotation format)
+ * 
  * @author Bill McDowell
  *
  */
@@ -160,8 +164,10 @@ public class ConstructCoNLLYagoDocumentSet {
 		System.out.println("Constructing document set " + name + "...");
 		
 		File outputDirectory = new File(dataTools.getProperties().getCoNLLYagoDataDirPath(), name);
-		if (!outputDirectory.mkdir())
+		if (!outputDirectory.mkdir()) {
+			dataTools.getOutputWriter().debugWriteln("Failed to create directory " + outputDirectory.getAbsolutePath());
 			return false;
+		}
 		
 		SerializerDocument<DocumentNLPMutable, ?> serializer = (bsonFormat) ? new SerializerDocumentNLPBSON(dataTools) : new SerializerDocumentNLPMicro(dataTools);
 		
@@ -169,8 +175,10 @@ public class ConstructCoNLLYagoDocumentSet {
 		for (Entry<String, List<List<String>>> entry : documentLines.entrySet()) {
 			System.out.println("Constructing document " + entry.getKey() + " for " + name + "...");
 			DocumentNLPMutable document = constructAnnotatedDocumentFromYagoTsvLines(entry.getKey(), entry.getValue());
-			if (!documents.addItem(document))
+			if (!documents.addItem(document)) {
+				dataTools.getOutputWriter().debugWriteln("Failed to store document " + name);
 				return false;
+			}
 		}
 		
 		return true;
