@@ -142,8 +142,8 @@ public class ConstructHazyFACC1BSON {
 	}
 	
 	private static DocumentNLPMutable constructUpdatedDocument(DocumentNLP oldDocument) {
-		if (oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.AMBIGUOUS_FACC1)
-				|| oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.FAILED_FACC1))
+		if (/*oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.AMBIGUOUS_FACC1)
+				||*/ oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.FAILED_FACC1))
 			return null;
 		
 		List<Pair<TokenSpan, FACC1Annotation>> facc1 = oldDocument.getTokenSpanAnnotations(AnnotationTypeNLPCat.FACC1);
