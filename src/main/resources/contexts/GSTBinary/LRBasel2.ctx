@@ -108,5 +108,5 @@ gs g=GridSearch() {
 	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
 	
 	model model=${lr};
-	evaluation evaluation=${accuracy};
+	evaluation evaluation=${f1};
 };
