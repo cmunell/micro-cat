@@ -8,8 +8,9 @@ import java.util.Set;
 
 import org.bson.Document;
 
+import edu.cmu.ml.rtw.generic.data.StoredItemSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
-import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
+import edu.cmu.ml.rtw.generic.data.annotation.DocumentSetInMemoryLazy;
 import edu.cmu.ml.rtw.generic.data.annotation.SerializerDocument;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
@@ -46,46 +47,53 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 public class ConstructHazyFACC1BSON {
 	private static CatProperties properties = new CatProperties();
 	private static CatDataTools dataTools = new CatDataTools();
-	private static PipelineNLPStanford stanfordPipeline;
 	private static SerializerDocumentNLPJSONLegacy jsonSerializer = new SerializerDocumentNLPJSONLegacy(dataTools);
 	
 	public static void main(String[] args) {
-		DocumentSet<DocumentNLP, DocumentNLPMutable> oldFacc1Docs = DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1, properties, dataTools);
-		stanfordPipeline = new PipelineNLPStanford();
-		stanfordPipeline.initialize(null, new JSONTokenizer());
+		DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> oldFacc1Docs = (DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>)DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1, properties, dataTools);
 		
+		Random r = new Random(1);
 		Set<String> oldDocNames = oldFacc1Docs.getDocumentNames();
+		List<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>> parts = oldFacc1Docs.makePartition(30, r);
 		final List<DocumentNLPMutable> newDocs = new ArrayList<>();
 		Singleton<Integer> count = new Singleton<Integer>(0);
-		ThreadMapper<String, Boolean> mapper = new ThreadMapper<String, Boolean>(new ThreadMapper.Fn<String, Boolean>() {
+		ThreadMapper<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean> mapper = new ThreadMapper<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean>(new ThreadMapper.Fn<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean>() {
 			@Override
-			public Boolean apply(String docName) {
-				synchronized (count) {
-					count.set(count.get() + 1);
-				}
+			public Boolean apply(StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs) {
 				
-				System.out.println("Updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
-				DocumentNLP oldDoc = oldFacc1Docs.getDocumentByName(docName);
-				DocumentNLPMutable newDoc = constructUpdatedDocument(oldDoc);
-				if (newDoc == null) {
-					System.out.println("Skipped " + docName + " (no facc1)");
-					return true;
-				} else {
-					System.out.println("Finished updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
-				}
+				PipelineNLPStanford stanfordPipeline = new PipelineNLPStanford();
+				stanfordPipeline.initialize(AnnotationTypeNLP.COREF, new JSONTokenizer());
 				
-				synchronized (newDocs) {
-					newDocs.add(newDoc);
+				for (DocumentNLP doc : docs) {
+					String docName = doc.getName();
+					
+					synchronized (count) {
+						count.set(count.get() + 1);
+					}
+					
+					System.out.println("Updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
+					DocumentNLP oldDoc = oldFacc1Docs.getDocumentByName(docName);
+					DocumentNLPMutable newDoc = constructUpdatedDocument(oldDoc, stanfordPipeline);
+					if (newDoc == null) {
+						System.out.println("Skipped " + docName + " (no facc1)");
+						return true;
+					} else {
+						System.out.println("Finished updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
+					}
+					
+					synchronized (newDocs) {
+						newDocs.add(newDoc);
+					}
 				}
 				
 				return true;
 			} 
 		});
 		
-		mapper.run(oldDocNames, 30);
+		mapper.run(parts, 30);
 		System.out.println("Finished updating documents (" + newDocs.size() + ").");
 	
-		Random r = new Random(1);
+		
 		List<DocumentNLPMutable> newDocsPerm = MathUtil.randomPermutation(r, newDocs);
 		int trainEndIndex = (int)Math.floor(newDocsPerm.size() * .8);
 		int devEndIndex = (int)Math.floor(newDocsPerm.size() * .9);
@@ -141,7 +149,7 @@ public class ConstructHazyFACC1BSON {
 		return true;
 	}
 	
-	private static DocumentNLPMutable constructUpdatedDocument(DocumentNLP oldDocument) {
+	private static DocumentNLPMutable constructUpdatedDocument(DocumentNLP oldDocument, PipelineNLPStanford stanfordPipeline) {
 		if (/*oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.AMBIGUOUS_FACC1)
 				||*/ oldDocument.getDocumentAnnotation(AnnotationTypeNLPCat.FAILED_FACC1))
 			return null;
