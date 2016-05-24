@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import org.bson.Document;
 
 import edu.cmu.ml.rtw.generic.data.annotation.AnnotationType;
 import edu.cmu.ml.rtw.generic.data.annotation.DocumentSet;
 import edu.cmu.ml.rtw.generic.data.annotation.SerializerDocument;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPInMemory;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPBSON;
+import edu.cmu.ml.rtw.generic.data.annotation.nlp.SerializerDocumentNLPJSONLegacy;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
 import edu.cmu.ml.rtw.generic.data.store.StoredCollectionFileSystem;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.AnnotatorTokenSpan;
@@ -44,6 +47,7 @@ public class ConstructHazyFACC1BSON {
 	private static CatProperties properties = new CatProperties();
 	private static CatDataTools dataTools = new CatDataTools();
 	private static PipelineNLPStanford stanfordPipeline;
+	private static SerializerDocumentNLPJSONLegacy jsonSerializer = new SerializerDocumentNLPJSONLegacy(dataTools);
 	
 	public static void main(String[] args) {
 		DocumentSet<DocumentNLP, DocumentNLPMutable> oldFacc1Docs = DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1, properties, dataTools);
@@ -99,7 +103,10 @@ public class ConstructHazyFACC1BSON {
 	}
 	
 	private static boolean outputDocuments(List<DocumentNLPMutable> docs, int startIndex, int endIndex, String outputDirName) {
-		SerializerDocument<DocumentNLPMutable, Document> serializer = new SerializerDocumentNLPBSON(dataTools);
+		List<AnnotationType<?>> annotationTypes = new ArrayList<>();
+		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
+		annotationTypes.remove(AnnotationTypeNLP.ORIGINAL_TEXT);
+		SerializerDocument<DocumentNLPMutable, Document> serializer = new SerializerDocumentNLPBSON(docs.get(0), annotationTypes);
 		
 		File outputDirectory = new File(dataTools.getProperties().getHazyFACC1BSONDirPath(), outputDirName);
 		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
@@ -182,7 +189,7 @@ public class ConstructHazyFACC1BSON {
 		});
 		
 		PipelineNLP pipeline = stanfordPipeline.weld(facc1Pipeline);
-		DocumentNLPInMemory document = new DocumentNLPInMemory(dataTools, oldDocument.getName(), "");
+		DocumentNLPInMemory document = new DocumentNLPInMemory(dataTools, oldDocument.getName(), jsonSerializer.serializeToString((DocumentNLPMutable)oldDocument));
 		pipeline.run(document);
 		return document;
 	}
