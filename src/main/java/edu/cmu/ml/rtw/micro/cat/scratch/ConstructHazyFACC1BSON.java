@@ -129,11 +129,11 @@ public class ConstructHazyFACC1BSON {
 		
 		List<DocumentNLPMutable> docsPart = docs.subList(startIndex, endIndex);
 		StoredCollectionFileSystem<DocumentNLPMutable, Document> documents = new StoredCollectionFileSystem<DocumentNLPMutable, Document>(outputDirName, outputDirectory, serializer);
-		
+
+		System.out.println("Storing " + outputDirName);
 		ThreadMapper<DocumentNLPMutable, Boolean> mapper = new ThreadMapper<DocumentNLPMutable, Boolean>(new ThreadMapper.Fn<DocumentNLPMutable, Boolean>() {
 			@Override
 			public Boolean apply(DocumentNLPMutable doc) {
-				System.out.println("Storing " + doc.getName() + "... (" + outputDirName + ")");
 				
 				if (!documents.addItem(doc)) {
 					dataTools.getOutputWriter().debugWriteln("Failed to store document " + doc.getName());
