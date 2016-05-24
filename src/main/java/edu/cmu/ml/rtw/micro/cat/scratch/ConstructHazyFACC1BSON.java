@@ -56,21 +56,26 @@ public class ConstructHazyFACC1BSON {
 		
 		Set<String> oldDocNames = oldFacc1Docs.getDocumentNames();
 		final List<DocumentNLPMutable> newDocs = new ArrayList<>();
-		Singleton<Integer> count = new Singleton<Integer>(1);
+		Singleton<Integer> count = new Singleton<Integer>(0);
 		ThreadMapper<String, Boolean> mapper = new ThreadMapper<String, Boolean>(new ThreadMapper.Fn<String, Boolean>() {
 			@Override
 			public Boolean apply(String docName) {
+				synchronized (count) {
+					count.set(count.get() + 1);
+				}
+				
 				System.out.println("Updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
 				DocumentNLP oldDoc = oldFacc1Docs.getDocumentByName(docName);
 				DocumentNLPMutable newDoc = constructUpdatedDocument(oldDoc);
 				if (newDoc == null) {
 					System.out.println("Skipped " + docName + " (no facc1)");
 					return true;
+				} else {
+					System.out.println("Finished updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
 				}
 				
-				synchronized (count) {
+				synchronized (newDocs) {
 					newDocs.add(newDoc);
-					count.set(count.get() + 1);
 				}
 				
 				return true;
