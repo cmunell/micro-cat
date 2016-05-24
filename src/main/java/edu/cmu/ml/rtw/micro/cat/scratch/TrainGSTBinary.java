@@ -97,6 +97,8 @@ public class TrainGSTBinary {
 			datumTools.addLabelIndicator(labelIndicator);
 		}
 		
+		System.out.println(context.toParse());
+		
 		ValidationGSTBinary<TokenSpansDatum<Boolean>,TokenSpansDatum<CategoryList>,CategoryList> validation = 
 				new ValidationGSTBinary<TokenSpansDatum<Boolean>, TokenSpansDatum<CategoryList>, CategoryList>(
 						experimentName, 
