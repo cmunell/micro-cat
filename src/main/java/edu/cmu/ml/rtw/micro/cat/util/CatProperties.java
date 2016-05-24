@@ -76,7 +76,7 @@ public class CatProperties extends Properties {
 		this.bagOfWordsFeatureStopWordGazetteerPath = loadProperty("bagOfWordsFeatureStopWordGazetteerPath");
 		this.NELLDataFileDirPath = loadProperty("NELLDataFileDirPath");
 		this.CoNLLYagoDataDirPath = loadProperty("CoNLLYagoDataDirPath");
-		this.hazyFACC1BSONDirPath = loadProperty("HazyFACC1BSONDirPath");
+		this.hazyFACC1BSONDirPath = loadProperty("hazyFACC1BSONDirPath");
 	}
 	
 	public String getGoogleApiKey() {
