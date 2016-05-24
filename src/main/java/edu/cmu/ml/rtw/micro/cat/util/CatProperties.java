@@ -39,6 +39,7 @@ public class CatProperties extends Properties {
 	private String NELLNounPhraseStopWordGazetteerPath;
 	private String bagOfWordsFeatureStopWordGazetteerPath;
 	private String NELLDataFileDirPath;
+	private String hazyFACC1BSONDirPath;
 	
 	public CatProperties() {
 		this(null);
@@ -75,7 +76,7 @@ public class CatProperties extends Properties {
 		this.bagOfWordsFeatureStopWordGazetteerPath = loadProperty("bagOfWordsFeatureStopWordGazetteerPath");
 		this.NELLDataFileDirPath = loadProperty("NELLDataFileDirPath");
 		this.CoNLLYagoDataDirPath = loadProperty("CoNLLYagoDataDirPath");
-	
+		this.hazyFACC1BSONDirPath = loadProperty("HazyFACC1BSONDirPath");
 	}
 	
 	public String getGoogleApiKey() {
@@ -188,5 +189,9 @@ public class CatProperties extends Properties {
 	
 	public String getCoNLLYagoDataDirPath() {
 		return this.CoNLLYagoDataDirPath;
+	}
+	
+	public String getHazyFACC1BSONDirPath() {
+		return this.hazyFACC1BSONDirPath;
 	}
 }
