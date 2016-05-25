@@ -84,7 +84,7 @@ public class ConstructHazyFACC1BSON {
 					}
 					
 					System.out.println("Updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
-					DocumentNLP oldDoc = oldFacc1Docs.getDocumentByName(docName);
+					DocumentNLP oldDoc = oldFacc1Docs.getDocumentByName(docName, false);
 					DocumentNLPMutable newDoc = constructUpdatedDocument(oldDoc, stanfordPipeline);
 					if (newDoc == null) {
 						System.out.println("Skipped " + docName + " (no facc1)");
