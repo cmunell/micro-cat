@@ -47,7 +47,7 @@ public class CatProperties extends Properties {
 	
 	public CatProperties(String path) {
 		super( new String[] { (path == null) ? "cat.properties" : path } );
-		
+		System.out.println("Got to here ");
 		this.googleApiKey = loadProperty("googleApiKey");
 		this.clueWeb09Facc1DirPath = loadProperty("clueWeb09Facc1DirPath");
 		this.clueWeb09Facc1PlusTypesDirPath = loadProperty("clueWeb09Facc1PlusTypesDirPath");
