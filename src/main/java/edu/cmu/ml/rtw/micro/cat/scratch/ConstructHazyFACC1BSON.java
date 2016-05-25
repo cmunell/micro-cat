@@ -25,7 +25,6 @@ import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLP;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPExtendable;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.PipelineNLPStanford;
 import edu.cmu.ml.rtw.generic.model.annotator.nlp.stanford.JSONTokenizer;
-import edu.cmu.ml.rtw.generic.util.MathUtil;
 import edu.cmu.ml.rtw.generic.util.Pair;
 import edu.cmu.ml.rtw.generic.util.Singleton;
 import edu.cmu.ml.rtw.generic.util.ThreadMapper;
@@ -52,15 +51,28 @@ public class ConstructHazyFACC1BSON {
 	public static void main(String[] args) {
 		DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> oldFacc1Docs = (DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>)DocumentSetNLPFactory.getDocumentSet(DocumentSetNLPFactory.SetName.HazyFacc1, properties, dataTools);
 		
+		List<AnnotationType<?>> annotationTypes = new ArrayList<>();
+		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
+		annotationTypes.remove(AnnotationTypeNLP.ORIGINAL_TEXT);
+		SerializerDocument<DocumentNLPMutable, Document> serializer = new SerializerDocumentNLPBSON(null, annotationTypes);
+		
+		File tempOutputDirectory = new File(dataTools.getProperties().getHazyFACC1BSONDirPath(), "temp");
+		if (!tempOutputDirectory.exists() && !tempOutputDirectory.mkdir()) {
+			dataTools.getOutputWriter().debugWriteln("Failed to create directory " + tempOutputDirectory.getAbsolutePath());
+			System.exit(0);
+		}
+		
+		StoredCollectionFileSystem<DocumentNLPMutable, Document> documents = new StoredCollectionFileSystem<DocumentNLPMutable, Document>("temp", tempOutputDirectory, serializer);
+		
 		Random r = new Random(1);
 		Set<String> oldDocNames = oldFacc1Docs.getDocumentNames();
 		List<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>> parts = oldFacc1Docs.makePartition(30, r);
-		final List<DocumentNLPMutable> newDocs = new ArrayList<>();
+
 		Singleton<Integer> count = new Singleton<Integer>(0);
+		
 		ThreadMapper<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean> mapper = new ThreadMapper<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean>(new ThreadMapper.Fn<StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>, Boolean>() {
 			@Override
 			public Boolean apply(StoredItemSetInMemoryLazy<DocumentNLP, DocumentNLPMutable> docs) {
-				
 				PipelineNLPStanford stanfordPipeline = new PipelineNLPStanford();
 				stanfordPipeline.initialize(AnnotationTypeNLP.COREF, new JSONTokenizer());
 				
@@ -81,8 +93,9 @@ public class ConstructHazyFACC1BSON {
 						System.out.println("Finished updating " + docName + "... (" + count.get() + "/" + oldDocNames.size() + ")");
 					}
 					
-					synchronized (newDocs) {
-						newDocs.add(newDoc);
+					if (!documents.addItem(newDoc)) {
+						dataTools.getOutputWriter().debugWriteln("Failed to store document " + newDoc.getName());
+						System.exit(0);
 					}
 				}
 				
@@ -91,7 +104,7 @@ public class ConstructHazyFACC1BSON {
 		});
 		
 		mapper.run(parts, 30);
-		System.out.println("Finished updating documents (" + newDocs.size() + ").");
+		/*System.out.println("Finished updating documents (" + newDocs.size() + ").");
 	
 		
 		List<DocumentNLPMutable> newDocsPerm = MathUtil.randomPermutation(r, newDocs);
@@ -112,41 +125,7 @@ public class ConstructHazyFACC1BSON {
 		if (!outputDocuments(newDocsPerm, devEndIndex, newDocsPerm.size(), "test")) {
 			System.out.println("Failed to output test docs.");
 			System.exit(0);
-		}
-	}
-	
-	private static boolean outputDocuments(List<DocumentNLPMutable> docs, int startIndex, int endIndex, String outputDirName) {
-		List<AnnotationType<?>> annotationTypes = new ArrayList<>();
-		annotationTypes.addAll(dataTools.getAnnotationTypesNLP());
-		annotationTypes.remove(AnnotationTypeNLP.ORIGINAL_TEXT);
-		SerializerDocument<DocumentNLPMutable, Document> serializer = new SerializerDocumentNLPBSON(docs.get(0), annotationTypes);
-		
-		File outputDirectory = new File(dataTools.getProperties().getHazyFACC1BSONDirPath(), outputDirName);
-		if (!outputDirectory.exists() && !outputDirectory.mkdir()) {
-			dataTools.getOutputWriter().debugWriteln("Failed to create directory " + outputDirectory.getAbsolutePath());
-			return false;
-		}
-		
-		List<DocumentNLPMutable> docsPart = docs.subList(startIndex, endIndex);
-		StoredCollectionFileSystem<DocumentNLPMutable, Document> documents = new StoredCollectionFileSystem<DocumentNLPMutable, Document>(outputDirName, outputDirectory, serializer);
-
-		System.out.println("Storing " + outputDirName);
-		ThreadMapper<DocumentNLPMutable, Boolean> mapper = new ThreadMapper<DocumentNLPMutable, Boolean>(new ThreadMapper.Fn<DocumentNLPMutable, Boolean>() {
-			@Override
-			public Boolean apply(DocumentNLPMutable doc) {
-				
-				if (!documents.addItem(doc)) {
-					dataTools.getOutputWriter().debugWriteln("Failed to store document " + doc.getName());
-					System.exit(0);
-				}
-				
-				return true;
-			} 
-		});
-		
-		mapper.run(docsPart, 30);
-
-		return true;
+		}*/
 	}
 	
 	private static DocumentNLPMutable constructUpdatedDocument(DocumentNLP oldDocument, PipelineNLPStanford stanfordPipeline) {
