@@ -83,7 +83,7 @@ feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtra
 
 feature fctx3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${posLemma} o ${insAll1} o ${beforeAfterS3}));
 feature fins1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${posLemma} o ${insAll1}));
-feature fdep=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="1", tokenExtractor="AllTokenSpans", fn=${depLemma});
+feature fdep=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${depLemma});
 feature fdepRel=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${depRel});
 
 model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="1000001", batchSize="200", evaluationIterations="200", maxEvaluationConstantIterations="500", weightedLabels="false", computeTestEvaluations="false")
