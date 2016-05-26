@@ -1,5 +1,6 @@
 package edu.cmu.ml.rtw.micro.cat.scratch;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -59,12 +61,14 @@ public class TrainGSTBinary {
 	private static DocumentSetNLPFactory.SetName devDocumentSetName;
 	private static DocumentSetNLPFactory.SetName testDocumentSetName;
 	private static AnnotationTypeNLP<String> categoryType;
+	private static String modelOutputFilePath;
 	
 	private static DatumContext<TokenSpansDatum<CategoryList>, CategoryList> context;
 	private static TokenSpansDatum.Tools<CategoryList> datumTools;
 	private static CatProperties properties;
 	private static CatDataTools dataTools;
 	private static int datumId;
+	
 	
 	public static void main(String[] args) {
 		if (!parseArgs(args))
@@ -109,6 +113,35 @@ public class TrainGSTBinary {
 		if (!validation.runAndOutput())
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run validation.");
 		
+		if (modelOutputFilePath != null && modelOutputFilePath.length() > 0)
+			outputClasses(validation.getAllModelTestScores());
+	}
+	
+	private static boolean outputClasses(Map<String, Map<TokenSpansDatum<Boolean>, Map<Boolean, Double>>> scoredClasses) {
+		Map<Integer, Map<String, Double>> datumsToScores = new TreeMap<>();
+		for (Entry<String, Map<TokenSpansDatum<Boolean>, Map<Boolean, Double>>> entry : scoredClasses.entrySet()) {
+			String category = entry.getKey().replace("_", "/");
+			for (Entry<TokenSpansDatum<Boolean>, Map<Boolean, Double>> entry2 : entry.getValue().entrySet()) {
+				if (!datumsToScores.containsKey(entry2.getKey().getId()))
+					datumsToScores.put(entry2.getKey().getId(), new HashMap<>());
+				datumsToScores.get(entry2.getKey().getId()).put(category, entry2.getValue().get(true));
+			}
+		}
+		
+		BufferedWriter w = FileUtil.getFileWriter(modelOutputFilePath);
+		
+		try {
+			for (Entry<Integer, Map<String, Double>> entry : datumsToScores.entrySet()) {
+				CategoryList c = new CategoryList(entry.getValue());
+				w.write(entry.getKey() + "\t" + c + "\n");
+			}
+			w.close();
+		} catch (IOException e) {
+			System.out.println("Failed to output classifications scores");
+			System.exit(0);
+		}
+		
+		return true;
 	}
 	
 	private static DataSet<TokenSpansDatum<CategoryList>, CategoryList> constructDataSet(DocumentSet<DocumentNLP, DocumentNLPMutable> documentSet) {
@@ -175,6 +208,11 @@ public class TrainGSTBinary {
 			.describedAs("Category annotation type")
 			.defaultsTo("freebase-type");
 		
+		parser.accepts("modelOutputFilePath").withRequiredArg()
+			.ofType(String.class)
+			.describedAs("Model output file path")
+			.defaultsTo("");
+		
 		parser.accepts("help").forHelp();
 		
 		OptionSet options = parser.parse(args);
@@ -194,6 +232,8 @@ public class TrainGSTBinary {
 		trainDocumentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("trainDocumentSetName").toString());
 		devDocumentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("devDocumentSetName").toString());
 		testDocumentSetName = DocumentSetNLPFactory.SetName.valueOf(options.valueOf("testDocumentSetName").toString());
+		
+		modelOutputFilePath = options.valueOf("modelOutputFilePath").toString();
 		
 		properties = new CatProperties();
 		String experimentInputPath = new File(properties.getContextInputDirPath(), "/GSTBinary/" + experimentName + ".ctx").getAbsolutePath();
