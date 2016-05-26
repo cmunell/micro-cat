@@ -70,6 +70,14 @@ public class OutputFeatureMatrix {
 				new DataFeatureMatrix<>(context, "", data, features);
 		SerializerDataFeatureMatrixBSONString ser = new SerializerDataFeatureMatrixBSONString(dataTools);
 	
+		int i = 0;
+		for (TokenSpansDatum<CategoryList> datum : data) {
+			if (i > 10)
+				break;
+			System.out.println(datum.getId() + "\t" + datum.getTokenSpans()[0].getDocument().getName() + "\t" + datum.getTokenSpans()[0].getSentenceIndex() + "\t" + datum.getTokenSpans()[0].getStartTokenIndex() + "\t" + datum.getTokenSpans()[0].getEndTokenIndex());
+			i++;
+		}
+			
 		FileUtil.writeFile(outputFilePath, ser.serializeToString(mat));
 	}
 	
