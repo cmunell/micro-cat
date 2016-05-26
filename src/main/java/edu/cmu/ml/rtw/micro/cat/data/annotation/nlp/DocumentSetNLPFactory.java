@@ -29,6 +29,10 @@ import edu.cmu.ml.rtw.micro.cat.util.CatProperties;
 public class DocumentSetNLPFactory {
 	public enum SetName {
 		HazyFacc1,
+		HazyFacc1Bson,
+		HazyFacc1BsonTrain,
+		HazyFacc1BsonDev,
+		HazyFacc1BsonTest,
 		CoNLL_YAGO_train,
 		CoNLL_YAGO_testa,
 		CoNLL_YAGO_testb
@@ -38,6 +42,22 @@ public class DocumentSetNLPFactory {
 		if (name == SetName.HazyFacc1) {
 			SerializerDocumentNLPJSONLegacy serializer = new SerializerDocumentNLPJSONLegacy(dataTools);
 			StoredCollectionFileSystem<DocumentNLPMutable, JSONObject> storage = new StoredCollectionFileSystem<DocumentNLPMutable, JSONObject>("HazyFacc1", new File(properties.getHazyFacc1DataDirPath()), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
+		} else if (name == SetName.HazyFacc1Bson) {
+			SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, Document> storage = new StoredCollectionFileSystem<DocumentNLPMutable, Document>("HazyFacc1Bson", new File(properties.getHazyFACC1BSONDirPath(), "temp"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
+		} else if (name == SetName.HazyFacc1BsonTrain) {
+			SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, Document> storage = new StoredCollectionFileSystem<DocumentNLPMutable, Document>("HazyFacc1BsonTrain", new File(properties.getHazyFACC1BSONDirPath(), "train"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
+		} else if (name == SetName.HazyFacc1BsonDev) {
+			SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, Document> storage = new StoredCollectionFileSystem<DocumentNLPMutable, Document>("HazyFacc1BsonDev", new File(properties.getHazyFACC1BSONDirPath(), "dev"), serializer);
+			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
+		} else if (name == SetName.HazyFacc1BsonTest) {
+			SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(dataTools);
+			StoredCollectionFileSystem<DocumentNLPMutable, Document> storage = new StoredCollectionFileSystem<DocumentNLPMutable, Document>("HazyFacc1BsonTest", new File(properties.getHazyFACC1BSONDirPath(), "test"), serializer);
 			return new DocumentSetInMemoryLazy<DocumentNLP, DocumentNLPMutable>(storage);
 		} else if (name == SetName.CoNLL_YAGO_train) {
 			SerializerDocumentNLPBSON serializer = new SerializerDocumentNLPBSON(dataTools);
