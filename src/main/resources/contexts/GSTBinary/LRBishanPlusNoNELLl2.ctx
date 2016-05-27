@@ -75,12 +75,6 @@ feature fsuf=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", t
 feature fsent1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${strBoW} o ${sent1}));
 feature fner=Ner(useTypes="true", tokenExtractor="AllTokenSpans");
 
-feature fgnp=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="FirstTokenSpan", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnps=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="SentenceNELLNounPhrases", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd1=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentUnigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd2=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentBigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-feature fgnpd3=GazetteerContains(gazetteer="NounPhraseNELLCategory", stringExtractor="AllDocumentTrigramsNP", includeIds="true", includeWeights="true", weightThreshold="0.90");
-
 feature fctx3=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${posLemma} o ${insAll1} o ${beforeAfterS3}));
 feature fins1=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=(${posLemma} o ${insAll1}));
 feature fdep=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2", tokenExtractor="AllTokenSpans", fn=${depLemma});

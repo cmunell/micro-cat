@@ -21,6 +21,7 @@ import edu.cmu.ml.rtw.generic.data.annotation.nlp.AnnotationTypeNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLP;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.DocumentNLPMutable;
 import edu.cmu.ml.rtw.generic.data.annotation.nlp.TokenSpan;
+import edu.cmu.ml.rtw.generic.data.feature.SerializerDataFeatureMatrixBSONString;
 import edu.cmu.ml.rtw.generic.model.evaluation.ValidationGSTBinary;
 import edu.cmu.ml.rtw.generic.util.FileUtil;
 import edu.cmu.ml.rtw.generic.util.OutputWriter;
@@ -114,10 +115,10 @@ public class TrainGSTBinary {
 			dataTools.getOutputWriter().debugWriteln("ERROR: Failed to run validation.");
 		
 		if (modelOutputFilePath != null && modelOutputFilePath.length() > 0)
-			outputClasses(validation.getAllModelTestScores());
+			outputMatrices(validation.getAllModelTestScores(), validation);
 	}
 	
-	private static boolean outputClasses(Map<String, Map<TokenSpansDatum<Boolean>, Map<Boolean, Double>>> scoredClasses) {
+	private static boolean outputMatrices(Map<String, Map<TokenSpansDatum<Boolean>, Map<Boolean, Double>>> scoredClasses, ValidationGSTBinary<TokenSpansDatum<Boolean>,TokenSpansDatum<CategoryList>,CategoryList> validation) {
 		Map<Integer, Map<String, Double>> datumsToScores = new TreeMap<>();
 		for (Entry<String, Map<TokenSpansDatum<Boolean>, Map<Boolean, Double>>> entry : scoredClasses.entrySet()) {
 			String category = entry.getKey().replace("_", "/");
@@ -128,7 +129,7 @@ public class TrainGSTBinary {
 			}
 		}
 		
-		BufferedWriter w = FileUtil.getFileWriter(modelOutputFilePath);
+		BufferedWriter w = FileUtil.getFileWriter(modelOutputFilePath + ".testP");
 		
 		try {
 			for (Entry<Integer, Map<String, Double>> entry : datumsToScores.entrySet()) {
@@ -140,6 +141,12 @@ public class TrainGSTBinary {
 			System.out.println("Failed to output classifications scores");
 			System.exit(0);
 		}
+		
+		SerializerDataFeatureMatrixBSONString ser = new SerializerDataFeatureMatrixBSONString(dataTools);
+		
+		FileUtil.writeFile(modelOutputFilePath + ".trainF", ser.serializeToString(validation.getTrainData().toDataFeatureMatrix(context)));
+		FileUtil.writeFile(modelOutputFilePath + ".devF", ser.serializeToString(validation.getDevData().toDataFeatureMatrix(context)));
+		FileUtil.writeFile(modelOutputFilePath + ".testF", ser.serializeToString(validation.getTestData().toDataFeatureMatrix(context)));
 		
 		return true;
 	}
