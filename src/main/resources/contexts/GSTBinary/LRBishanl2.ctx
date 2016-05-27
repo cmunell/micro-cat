@@ -1,4 +1,4 @@
-value randomSeed="1";
+value randomSeed=SetRandomSeed(seed="1");
 value maxThreads="33";
 value trainOnDev="false";
 value errorExampleExtractor="FirstTokenSpan";
@@ -69,8 +69,8 @@ model lr=Areg(l1="0", l2="0", convergenceEpsilon=".00001", maxTrainingExamples="
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="l2", values=(.00000001,.0000001,.000001,.00001,.0001,.001,.01,.1,1,10), trainingDimension="true");
-	dimension ct=Dimension(name="classificationThreshold", values=(.5,.6,.7,.8,.9), trainingDimension="false");
+	dimension l2=Dimension(name="l2", values=(.000001,.00001,.0001,.001,.01,.1,1), trainingDimension="true");
+	dimension ct=Dimension(name="classificationThreshold", values=(.5,.7,.9), trainingDimension="false");
 	
 	model model=${lr};
 	evaluation evaluation=${f1};
