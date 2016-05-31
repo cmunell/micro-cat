@@ -613,7 +613,7 @@ public class TokenSpansDatum<L> extends Datum<L> {
 				);
 			
 			CatDataTools dataTools = new CatDataTools(output, (CatDataTools)this.dataTools);
-			dataTools.setRandomSeed(this.dataTools.getGlobalRandom().nextLong());
+			dataTools.setRandomSeed(this.dataTools.getRandomSeed());
 			return (Datum.Tools<T, Boolean>)TokenSpansDatum.getBooleanTools(dataTools);
 		}
 		
