@@ -180,7 +180,7 @@ public class TrainGSTBinary {
 				);
 				datumId++;
 				
-				System.out.println((datumId - 1) + " " + entry.getKey() + " " + categories);
+				System.out.println((datumId - 1) + " " + entry.getKey() + " " + new CategoryList(categories, 0));
 			}
 		}
 	
