@@ -140,7 +140,8 @@ public class TokenSpansDatum<L> extends Datum<L> {
 				return CategoryList.fromString(str, (CatDataTools)dataTools);
 			}
 		};
-		final NELLUtil nell = new NELLUtil((CatDataTools)dataTools);
+		
+		final NELLUtil nell = (dataTools.getProperties() == null) ? null : new NELLUtil((CatDataTools)dataTools);
 		
 		tools.addGenericEvaluation(new SupervisedModelEvaluationPolysemy());
 		tools.addGenericEvaluation(new SupervisedModelEvaluationCategoryListFreebase());
@@ -345,7 +346,7 @@ public class TokenSpansDatum<L> extends Datum<L> {
 	public static abstract class Tools<L> extends Datum.Tools<TokenSpansDatum<L>, L> { 
 		public Tools(DataTools dataTools) {
 			super(dataTools);
-			final NELLUtil nell = new NELLUtil((CatDataTools)dataTools);
+			final NELLUtil nell = (dataTools.getProperties() == null) ? null : new NELLUtil((CatDataTools)dataTools);
 			PoSTag[][] NPTagClass = { PoSTagClass.NNP, PoSTagClass.NN };
 			
 			this.addGenericFeature(new FeatureNer<TokenSpansDatum<L>, L>());

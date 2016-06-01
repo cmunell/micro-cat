@@ -179,6 +179,8 @@ public class TrainGSTBinary {
 							false)
 				);
 				datumId++;
+				
+				System.out.println(datumId + " " + entry.getKey());
 			}
 		}
 	

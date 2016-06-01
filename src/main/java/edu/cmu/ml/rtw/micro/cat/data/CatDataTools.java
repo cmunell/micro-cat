@@ -57,7 +57,8 @@ public class CatDataTools extends DataTools {
 		
 		this.properties = properties;
 		this.documentSet = documentSet;
-		this.addPath("CregCmd", new Path("CregCmd", properties.getCregCommandPath()));
+		if (this.properties != null)
+			this.addPath("CregCmd", new Path("CregCmd", properties.getCregCommandPath()));
 	
 		// For cleaning strings, and replacing all white space with "_"
 		this.addCleanFn(new StringTransform() {
