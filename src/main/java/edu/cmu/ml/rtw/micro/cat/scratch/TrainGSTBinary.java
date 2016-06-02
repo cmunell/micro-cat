@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -159,16 +161,17 @@ public class TrainGSTBinary {
 		for (String documentName : documentNames) {
 			DocumentNLP document = documentSet.getDocumentByName(documentName);
 			List<Pair<TokenSpan, String>> annotations = document.getTokenSpanAnnotations(categoryType);
-			Map<TokenSpan, Set<String>> spanCategories = new HashMap<TokenSpan, Set<String>>();
+			Map<TokenSpan, Set<String>> spanCategories = new LinkedHashMap<TokenSpan, Set<String>>();
 		
 			for (Pair<TokenSpan, String> annotation : annotations) {
 				if (!spanCategories.containsKey(annotation.getFirst()))
-					spanCategories.put(annotation.getFirst(), new HashSet<String>());
+					spanCategories.put(annotation.getFirst(), new LinkedHashSet<String>());
 				spanCategories.get(annotation.getFirst()).add(annotation.getSecond());
 			}
 		
 			for (Entry<TokenSpan, Set<String>> entry : spanCategories.entrySet()) {
 				String[] categories = entry.getValue().toArray(new String[0]);
+				
 				if (categories.length == 1 && categories[0].equals(""))
 					continue;
 				
