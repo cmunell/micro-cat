@@ -88,11 +88,11 @@ feature fdepRel=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 
 model lr=StanfordLinear(defaultLabel="true", searchThreshold="true")
 {
-	array validLabels=("true", "false");
+	array validLabels=${validLabels}
 };
 
 gs g=GridSearch() {
-	dimension classificationThreshold=Dimension(name="classificationThreshold", values=("-1.0"), trainingDimension="true");
+	dimension defaultLabel=Dimension(name="defaultLabel", values=("true"), trainingDimension="true");
 	
 	model model=${lr};
 	evaluation evaluation=${f1};
