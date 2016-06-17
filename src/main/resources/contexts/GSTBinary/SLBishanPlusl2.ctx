@@ -88,7 +88,7 @@ feature fdepRel=TokenSpanFnDataVocab(scale="INDICATOR", minFeatureOccurrence="2"
 
 model lr=StanfordLinear(defaultLabel="true", searchThreshold="true")
 {
-	array validLabels=${validLabels};
+	array validLabels=("true", "false");
 };
 
 gs g=GridSearch() {
