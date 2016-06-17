@@ -92,7 +92,7 @@ model lr=StanfordLinear(defaultLabel="true", searchThreshold="true")
 };
 
 gs g=GridSearch() {
-	dimension l2=Dimension(name="defaultLabel", values=("true"), trainingDimension="true");
+	dimension defaultLabel=Dimension(name="defaultLabel", values=("true"), trainingDimension="true");
 	
 	model model=${lr};
 	evaluation evaluation=${f1};
