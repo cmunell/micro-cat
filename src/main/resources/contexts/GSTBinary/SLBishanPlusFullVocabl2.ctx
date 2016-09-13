@@ -54,7 +54,7 @@ ts_fn insAll1=NGramInside(n="1");
 ts_fn dep=DependencyRelation();
 ts_str_fn lemma = TokenAnnotation(annotationType="lemma");
 ts_str_fn posLemma = RelationStr(f1=${pos}, f2=${lemma}, relationSymbol="-");
-ts_fn beforeAfterS3 = NGramContext(type="BEFORE_AND_AFTER", n="3", allowSqueeze="true");
+ts_fn beforeAfterS3 = NGramContext(type="BEFORE_AND_AFTER", n="3", sentenceBoundaryMode="SQUEEZE");
 ts_str_fn depLemma = TokenSpanPathStr(mode="ALL", pathLength="1", spanFn1=${dep}, strFn=${posLemma}, multiRelation="true"); 
 ts_str_fn depRel = TokenSpanPathStr(mode="ONLY_RELATIONS", pathLength="1", spanFn1=${dep}, strFn=${posLemma}, multiRelation="true"); 
 
